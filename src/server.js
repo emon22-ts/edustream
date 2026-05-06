@@ -26,19 +26,7 @@ async function main() {
 
   const app = express();
 
-  app.use(helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-hashes'", "https://alcdn.msauth.net", "https://fonts.googleapis.com"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:"],
-        mediaSrc: ["'self'", "https://*.blob.core.windows.net", "https://*.azureedge.net"],
-        connectSrc: ["'self'", "https://login.microsoftonline.com", "https://graph.microsoft.com"]
-      }
-    }
-  }));
+  app.use(helmet({ contentSecurityPolicy: false }));
 
   app.use(cors());
   app.use(express.json({ limit: '1mb' }));
