@@ -725,11 +725,11 @@
       </div>
       <div class="field">
         <label>Media files (video · image · audio)</label>
-        <div class="dropzone" id="dropzone" onclick="document.getElementById('mediaInput').click()">
+        <div class="dropzone" id="dropzone" onclick="document.getElementById('mediaInput').click()" style="cursor:pointer">
           <div class="dropzone-icon">📥</div>
           <div class="dropzone-title">Drop files or click to browse</div>
           <div class="dropzone-hint">Up to 5 files · video 100MB · image 20MB · audio 50MB</div>
-          <input type="file" id="mediaInput" multiple accept="video/*,image/*,audio/*">
+          <input type="file" id="mediaInput" multiple accept="video/*,image/*,audio/*" style="display:block;margin-top:8px;width:100%">
         </div>
         <div class="file-list" id="fileList"></div>
       </div>
