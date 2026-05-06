@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduStream+ · A Cloud Library of Knowledge</title>
+<meta name="description" content="A cloud-powered academic streaming platform. Watch, listen, learn.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.85em' font-size='90'>📖</text></svg>">
+
+<!-- Distinctive type pairing: Fraunces (serif display) + Geist (geometric sans) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     EduStream+ design system
+     Editorial / academic tone — navy + cream + amber
+     Type: Fraunces (display serif) + Geist (sans body)
+  ============================================================ */
+  :root {
+    /* Palette */
+    --ink: #0e1a2b;          /* deep navy — primary text & header */
+    --ink-soft: #1f2c40;
+    --paper: #f4ecdc;         /* warm cream background */
+    --paper-tint: #ebe2cf;
+    --paper-deep: #e3d8c1;
+    --amber: #c9711a;         /* accent — highlight, action */
+    --amber-deep: #a35712;
+    --burgundy: #8a2433;      /* secondary accent — danger, alerts */
+    --moss: #4a6b3e;          /* tertiary — success */
+    --rule: #c9bfa9;          /* hairline border */
+    --shadow: 0 1px 0 rgba(14,26,43,0.04), 0 6px 18px rgba(14,26,43,0.06);
+    --shadow-lift: 0 2px 4px rgba(14,26,43,0.06), 0 18px 40px rgba(14,26,43,0.10);
+
+    /* Type */
+    --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --sans: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: "Geist Mono", "SF Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    font-weight: 400;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.55;
+    min-height: 100vh;
+    /* Subtle paper grain — adds tactile warmth without being noisy */
+    background-image:
+      radial-gradient(ellipse at top left, rgba(201,113,26,0.04), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(14,26,43,0.03), transparent 50%);
+  }
+
+  /* ===== Typography utilities ===== */
+  .display { font-family: var(--serif); font-weight: 500; font-feature-settings: "ss01" 1; letter-spacing: -0.02em; }
+  .display-italic { font-family: var(--serif); font-style: italic; font-weight: 400; }
+  .small-caps { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
+  .mono { font-family: var(--mono); }
+
+  /* ===== Header — editorial nameplate ===== */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    border-bottom: 1px solid var(--ink-soft);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nameplate-rule {
+    height: 4px;
+    background: linear-gradient(90deg, var(--amber) 0%, var(--amber) 38%, var(--paper) 38%, var(--paper) 62%, var(--burgundy) 62%);
+  }
+  .nameplate {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 18px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+  .masthead { display: flex; flex-direction: column; }
+  .masthead-eyebrow { color: var(--paper-tint); opacity: 0.7; font-size: 10px; letter-spacing: 0.22em; }
+  .masthead-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    margin-top: 4px;
+  }
+  .masthead-title em { font-style: italic; color: var(--amber); font-weight: 400; }
+  .masthead-tag {
+    color: var(--paper-tint);
+    font-size: 12px;
+    margin-top: 6px;
+    font-style: italic;
+    font-family: var(--serif);
+  }
+  .nav-tools { display: flex; align-items: center; gap: 14px; font-size: 13px; }
+  .nav-tools .user-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--ink-soft); padding: 6px 12px; border-radius: 999px;
+    font-family: var(--mono); font-size: 12px;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid rgba(244,236,220,0.3);
+    padding: 7px 16px;
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-ghost:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+
+  /* ===== Layout ===== */
+  main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
+
+  /* Hero — gives the page a confident opening */
+  .hero {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 48px;
+    padding-bottom: 36px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid var(--rule);
+    align-items: end;
+  }
+  .hero-headline {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 68px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--amber);
+    font-feature-settings: "ss01" 1;
+  }
+  .hero-headline .ornament { color: var(--burgundy); font-style: normal; }
+  .hero-aside {
+    border-left: 1px solid var(--rule);
+    padding-left: 28px;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+  .hero-aside .small-caps { color: var(--burgundy); margin-bottom: 8px; display: block; }
+  @media (max-width: 800px) {
+    .hero { grid-template-columns: 1fr; gap: 24px; }
+    .hero-aside { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 24px; }
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+    padding: 14px 18px;
+    background: var(--paper-tint);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    margin-bottom: 28px;
+  }
+  .filter-bar label {
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-soft); font-weight: 600;
+  }
+  .filter-bar input[type="search"], .filter-bar select {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    transition: border-color 0.15s;
+  }
+  .filter-bar input[type="search"] { flex: 1; min-width: 200px; }
+  .filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: var(--amber); }
+  .pill-group { display: flex; gap: 4px; }
+  .pill {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--sans);
+  }
+  .pill:hover { border-color: var(--amber); }
+  .pill.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* Two-column main: upload + library */
+  .layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 36px;
+    align-items: start;
+  }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+  /* Upload panel — sticky on desktop */
+  .upload-panel {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    position: sticky; top: 100px;
+  }
+  .panel-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .panel-subtitle {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: var(--serif);
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .field input[type="text"], .field textarea, .field select {
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--paper-tint);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    outline: none;
+    border-color: var(--amber);
+    background: var(--paper);
+  }
+  .field textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+
+  /* File drop zone */
+  .dropzone {
+    border: 2px dashed var(--rule);
+    border-radius: 6px;
+    padding: 22px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: var(--paper-tint);
+  }
+  .dropzone:hover, .dropzone.dragging {
+    border-color: var(--amber);
+    background: var(--paper);
+  }
+  .dropzone-icon { font-size: 28px; margin-bottom: 6px; }
+  .dropzone-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .dropzone-hint { font-size: 11.5px; color: var(--ink-soft); font-style: italic; font-family: var(--serif); }
+  .dropzone input[type="file"] { display: none; }
+
+  /* Selected files list */
+  .file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .file-row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--paper-tint); padding: 8px 12px; border-radius: 4px;
+    font-size: 13px;
+  }
+  .file-row .file-icon { font-size: 18px; }
+  .file-row .file-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-row .file-size { color: var(--ink-soft); font-size: 11px; font-family: var(--mono); }
+  .file-row .file-remove {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--burgundy); font-size: 16px; padding: 0 4px;
+  }
+
+  /* Buttons */
+  .btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 11px 22px;
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    width: 100%;
+    letter-spacing: 0.01em;
+  }
+  .btn:hover:not(:disabled) { background: var(--amber); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-amber { background: var(--amber); }
+  .btn-amber:hover:not(:disabled) { background: var(--amber-deep); }
+  .btn-burgundy { background: var(--burgundy); }
+  .btn-burgundy:hover:not(:disabled) { background: #6c1a26; }
+  .btn-outline {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+  }
+  .btn-outline:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+  .btn-small { padding: 6px 14px; font-size: 12.5px; width: auto; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .upload-hint {
+    margin-top: 14px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: var(--serif);
+    text-align: center;
+    line-height: 1.5;
+  }
+  .upload-hint .checks { display: flex; flex-direction: column; gap: 3px; margin-top: 6px; }
+
+  /* ===== Library / course list ===== */
+  .library-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 18px; padding-bottom: 12px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .library-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+  .library-title em { font-style: italic; color: var(--amber); }
+  .library-count {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .course-list { display: flex; flex-direction: column; gap: 28px; }
+
+  /* Course entry — newspaper-article styling */
+  .course {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    animation: fade-up 0.5s ease-out;
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .course:hover { box-shadow: var(--shadow-lift); }
+
+  .course-meta-strip {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 22px;
+    background: var(--paper-tint);
+    border-bottom: 1px solid var(--rule);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+  }
+  .course-category {
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--burgundy);
+  }
+  .course-divider { color: var(--rule); }
+  .course-date { color: var(--ink-soft); font-style: italic; font-family: var(--serif); letter-spacing: 0; }
+  .course-media-badges { margin-left: auto; display: flex; gap: 6px; }
+  .media-badge {
+    background: var(--ink); color: var(--paper);
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 10px; letter-spacing: 0.08em;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+
+  .course-body { padding: 22px 26px; }
+  .course-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+    margin-bottom: 6px;
+  }
+  .course-byline {
+    font-size: 13px;
+    font-style: italic;
+    font-family: var(--serif);
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .course-byline strong { font-style: normal; color: var(--ink); font-weight: 600; }
+  .course-description {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+    /* Drop cap on first letter for editorial feel */
+  }
+  .course-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tag {
+    background: transparent;
+    color: var(--amber-deep);
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--amber);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  /* Media viewer — adapts per type */
+  .media-viewer {
+    background: var(--ink);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .media-viewer.empty {
+    background: var(--paper-tint);
+    padding: 32px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: var(--serif);
+  }
+  .media-tabs {
+    display: flex;
+    background: var(--ink-soft);
+    padding: 4px;
+    gap: 2px;
+  }
+  .media-tab {
+    background: transparent;
+    color: var(--paper-tint);
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    border-radius: 3px;
+    transition: all 0.15s;
+    flex: 1;
+  }
+  .media-tab:hover { color: var(--paper); }
+  .media-tab.active { background: var(--ink); color: var(--amber); font-weight: 600; }
+  .media-tab-count {
+    font-family: var(--mono); font-size: 10px;
+    margin-left: 4px; opacity: 0.7;
+  }
+  .media-content { padding: 0; }
+  .media-content.has-padding { padding: 16px; }
+
+  .media-content video, .media-content audio {
+    width: 100%;
+    display: block;
+    background: black;
+  }
+  .media-content video { max-height: 480px; }
+  .media-content audio {
+    margin: 14px;
+    width: calc(100% - 28px);
+  }
+  .audio-label {
+    color: var(--paper);
+    padding: 10px 14px 0;
+    font-size: 13px;
+    font-family: var(--mono);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 6px;
+    padding: 6px;
+    background: var(--ink-soft);
+  }
+  .image-grid img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .image-grid img:hover { opacity: 0.85; }
+
+  .media-item-with-action {
+    position: relative;
+  }
+  .media-remove {
+    position: absolute; top: 6px; right: 6px;
+    background: rgba(14,26,43,0.85); color: white;
+    border: none; padding: 4px 8px; border-radius: 4px;
+    cursor: pointer; font-size: 11px;
+    opacity: 0; transition: opacity 0.18s;
+  }
+  .media-item-with-action:hover .media-remove { opacity: 1; }
+
+  /* Course actions */
+  .course-actions {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px dashed var(--rule);
+  }
+
+  /* Comments */
+  .comments-section {
+    padding: 18px 26px;
+    background: var(--paper-tint);
+    border-top: 1px solid var(--rule);
+  }
+  .comments-heading {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-soft); font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .comment {
+    border-left: 2px solid var(--rule);
+    padding: 4px 0 4px 14px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .comment-author {
+    font-weight: 600; color: var(--ink); font-size: 12.5px;
+    display: inline; margin-right: 6px;
+  }
+  .comment-date { font-size: 11px; color: var(--ink-soft); font-style: italic; font-family: var(--serif); }
+  .comment-text { color: var(--ink-soft); margin-top: 2px; line-height: 1.5; }
+  .comment-add { display: flex; gap: 8px; margin-top: 10px; }
+  .comment-add input {
+    flex: 1; padding: 8px 12px; background: var(--paper);
+    border: 1px solid var(--rule); border-radius: 4px;
+    font-family: var(--sans); font-size: 14px;
+  }
+  .comment-add input:focus { outline: none; border-color: var(--amber); }
+  .comment-add button {
+    background: var(--amber); color: var(--paper);
+    border: none; padding: 8px 16px; border-radius: 4px;
+    cursor: pointer; font-family: var(--sans); font-size: 13px;
+  }
+
+  .empty-state {
+    text-align: center; padding: 60px 20px;
+    background: var(--paper);
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+  }
+  .empty-state-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+  .empty-state-title {
+    font-family: var(--serif); font-size: 22px; font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .empty-state-text { color: var(--ink-soft); font-style: italic; font-family: var(--serif); }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 28px; right: 28px;
+    padding: 14px 22px;
+    background: var(--ink); color: var(--paper);
+    border-radius: 4px;
+    box-shadow: var(--shadow-lift);
+    font-size: 14px;
+    transform: translateY(120%); opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    z-index: 200; max-width: 360px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.success { background: var(--moss); }
+  #toast.error { background: var(--burgundy); }
+
+  /* Footer */
+  footer {
+    max-width: 1240px; margin: 60px auto 0;
+    padding: 28px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    text-align: center;
+    line-height: 1.7;
+  }
+  footer .display-italic { color: var(--ink); font-size: 14px; }
+  footer .meta { margin-top: 10px; font-family: var(--mono); font-size: 11px; opacity: 0.7; }
+
+  /* Lightbox for image preview */
+  .lightbox {
+    position: fixed; inset: 0; background: rgba(14,26,43,0.92);
+    display: none; align-items: center; justify-content: center;
+    z-index: 300; padding: 28px; cursor: zoom-out;
+  }
+  .lightbox.show { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 100%; border-radius: 4px; }
+
+  /* Loading */
+  .loading-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: var(--amber);
+    width: 0; opacity: 0;
+    transition: width 0.3s, opacity 0.2s;
+    z-index: 999;
+  }
+  .loading-bar.active { width: 70%; opacity: 1; }
+  .loading-bar.done { width: 100%; opacity: 0; }
+</style>
+</head>
+<body>
+
+<div class="loading-bar" id="loadingBar"></div>
+
+<header>
+  <div class="nameplate-rule"></div>
+  <div class="nameplate">
+    <div class="masthead">
+      <span class="masthead-eyebrow small-caps">Cloud · Native · Development</span>
+      <h1 class="masthead-title">EduStream<em>+</em></h1>
+      <span class="masthead-tag">Watch · Listen · Learn · Grow</span>
+    </div>
+    <div class="nav-tools">
+      <span class="user-chip" id="userChip" style="display:none"></span>
+      <button class="btn-ghost" id="signInBtn" onclick="signIn()">Sign in</button>
+      <button class="btn-ghost" id="signOutBtn" onclick="signOut()" style="display:none">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h2 class="hero-headline">
+      A cloud library<br>
+      of <em>knowledge</em>,<br>
+      delivered <em>on demand</em><span class="ornament">.</span>
+    </h2>
+    <aside class="hero-aside">
+      <span class="small-caps">A Note from the Editor</span>
+      <p>
+        EduStream+ is a multi-media academic platform —
+        upload <strong>video lectures</strong>, <strong>illustrated notes</strong>,
+        and <strong>audio recordings</strong> to a single course.
+        Powered by Microsoft Azure: Cosmos DB for metadata,
+        Blob Storage for media, App Service for compute, and
+        Application Insights for observability.
+      </p>
+    </aside>
+  </section>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <label>Find</label>
+    <input type="search" id="searchInput" placeholder="Search title or description..." oninput="debounceSearch()">
+    <select id="categoryFilter" onchange="loadCourses()">
+      <option value="">All categories</option>
+      <option>General</option>
+      <option>Technology</option>
+      <option>Business</option>
+      <option>Science</option>
+      <option>Arts</option>
+      <option>Humanities</option>
+    </select>
+    <label>Filter by</label>
+    <div class="pill-group" id="mediaFilter">
+      <button class="pill active" data-type="" onclick="setMediaFilter('')">All</button>
+      <button class="pill" data-type="video" onclick="setMediaFilter('video')">🎬 Video</button>
+      <button class="pill" data-type="image" onclick="setMediaFilter('image')">🖼️ Image</button>
+      <button class="pill" data-type="audio" onclick="setMediaFilter('audio')">🎵 Audio</button>
+    </div>
+  </div>
+
+  <!-- Main two-column layout -->
+  <div class="layout">
+
+    <!-- Upload panel -->
+    <aside class="upload-panel">
+      <h3 class="panel-title">Contribute a course</h3>
+      <p class="panel-subtitle">Upload videos, images, and audio together.</p>
+
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="title" placeholder="e.g. Foundations of Cloud Computing">
+      </div>
+      <div class="field">
+        <label>Instructor</label>
+        <input type="text" id="instructor" placeholder="e.g. Dr. Patel">
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea id="description" placeholder="What will learners gain?"></textarea>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select id="category">
+          <option>General</option>
+          <option>Technology</option>
+          <option>Business</option>
+          <option>Science</option>
+          <option>Arts</option>
+          <option>Humanities</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tags (comma-separated)</label>
+        <input type="text" id="tags" placeholder="azure, serverless, cloud">
+      </div>
+      <div class="field">
+        <label>Media files (video · image · audio)</label>
+        <div class="dropzone" id="dropzone" onclick="document.getElementById('mediaInput').click()">
+          <div class="dropzone-icon">📥</div>
+          <div class="dropzone-title">Drop files or click to browse</div>
+          <div class="dropzone-hint">Up to 5 files · video 100MB · image 20MB · audio 50MB</div>
+          <input type="file" id="mediaInput" multiple accept="video/*,image/*,audio/*">
+        </div>
+        <div class="file-list" id="fileList"></div>
+      </div>
+
+      <button class="btn btn-amber" id="createBtn" onclick="createCourse()">Publish course</button>
+
+      <div class="upload-hint">
+        <div class="checks">
+          <div>✓ Text screened by AI Content Safety</div>
+          <div>✓ Files stored in Azure Blob Storage</div>
+          <div>✓ Metadata in Cosmos DB · CDN-delivered</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Library -->
+    <section>
+      <div class="library-header">
+        <h2 class="library-title">The <em>Library</em></h2>
+        <span class="library-count mono" id="courseCount">— courses</span>
+      </div>
+      <div id="courses" class="course-list"></div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="display-italic">EduStream+ — A cloud-native academic streaming platform</div>
+  <div class="meta">
+    Cloud Native Development (COM682) · Mahfuzur Rahman Emon · B00976168<br>
+    Architecture: App Service · Cosmos DB · Blob Storage · CDN · Key Vault · App Insights · Entra ID · Content Safety
+  </div>
+</footer>
+
+<div id="toast"></div>
+<div class="lightbox" id="lightbox" onclick="closeLightbox()"><img id="lightboxImg"></div>
+
+<!-- MSAL.js for Entra ID authentication -->
+<script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
+<script>
+const API = '/api';
+let authClient = null;
+let currentAccount = null;
+let authConfig = { authEnabled: false };
+let mediaFilter = '';
+let selectedFiles = [];
+
+// ============================================================
+// AUTH
+// ============================================================
+async function initAuth() {
+  try {
+    const res = await fetch(API + '/auth/status');
+    authConfig = await res.json();
+
+    if (authConfig.authEnabled && window.AZURE_CLIENT_ID) {
+      authClient = new msal.PublicClientApplication({
+        auth: {
+          clientId: window.AZURE_CLIENT_ID,
+          authority: `https://login.microsoftonline.com/${window.AZURE_TENANT_ID || 'common'}`,
+          redirectUri: window.location.origin
+        },
+        cache: { cacheLocation: 'sessionStorage' }
+      });
+      await authClient.initialize();
+      const accounts = authClient.getAllAccounts();
+      if (accounts.length) { currentAccount = accounts[0]; updateAuthUI(); }
+    } else {
+      // Auth disabled — show dev indicator
+      document.getElementById('signInBtn').style.display = 'none';
+      const chip = document.getElementById('userChip');
+      chip.textContent = '🔓 dev mode';
+      chip.style.display = 'inline-flex';
+    }
+  } catch (e) { console.warn('Auth init failed:', e); }
+}
+
+async function signIn() {
+  if (!authClient) return toast('Auth not configured', 'error');
+  try {
+    const result = await authClient.loginPopup({ scopes: ['User.Read'] });
+    currentAccount = result.account;
+    updateAuthUI();
+    toast('Signed in as ' + currentAccount.name, 'success');
+    loadCourses();
+  } catch (e) { toast('Sign-in failed: ' + e.message, 'error'); }
+}
+
+async function signOut() {
+  if (!authClient) return;
+  await authClient.logoutPopup({ account: currentAccount });
+  currentAccount = null;
+  updateAuthUI();
+  loadCourses();
+}
+
+function updateAuthUI() {
+  const chip = document.getElementById('userChip');
+  const signInBtn = document.getElementById('signInBtn');
+  const signOutBtn = document.getElementById('signOutBtn');
+  if (currentAccount) {
+    chip.innerHTML = '👤 ' + escapeHtml(currentAccount.name || currentAccount.username);
+    chip.style.display = 'inline-flex';
+    signInBtn.style.display = 'none';
+    signOutBtn.style.display = 'inline-block';
+  } else {
+    chip.style.display = 'none';
+    signInBtn.style.display = 'inline-block';
+    signOutBtn.style.display = 'none';
+  }
+}
+
+async function getAuthHeader() {
+  if (!authConfig.authEnabled || !currentAccount) return {};
+  try {
+    const result = await authClient.acquireTokenSilent({
+      scopes: window.AZURE_CLIENT_ID ? [`api://${window.AZURE_CLIENT_ID}/access_as_user`] : ['User.Read'],
+      account: currentAccount
+    });
+    return { Authorization: 'Bearer ' + result.accessToken };
+  } catch (e) {
+    console.warn('Token acquisition failed:', e);
+    return {};
+  }
+}
+
+// ============================================================
+// TOAST + LOADING
+// ============================================================
+function toast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 4000);
+}
+function showLoading() { document.getElementById('loadingBar').className = 'active'; }
+function hideLoading() {
+  const lb = document.getElementById('loadingBar');
+  lb.className = 'done';
+  setTimeout(() => lb.className = '', 300);
+}
+
+// ============================================================
+// COURSE LIST
+// ============================================================
+let searchDebounce;
+function debounceSearch() { clearTimeout(searchDebounce); searchDebounce = setTimeout(loadCourses, 300); }
+
+function setMediaFilter(type) {
+  mediaFilter = type;
+  document.querySelectorAll('#mediaFilter .pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.type === type);
+  });
+  loadCourses();
+}
+
+async function loadCourses() {
+  showLoading();
+  try {
+    const search = document.getElementById('searchInput').value;
+    const category = document.getElementById('categoryFilter').value;
+    const params = new URLSearchParams();
+    if (search) params.set('search', search);
+    if (category) params.set('category', category);
+    if (mediaFilter) params.set('mediaType', mediaFilter);
+
+    const res = await fetch(`${API}/courses?${params}`);
+    const courses = await res.json();
+    document.getElementById('courseCount').textContent = `${courses.length} ${courses.length === 1 ? 'course' : 'courses'}`;
+
+    const list = document.getElementById('courses');
+    if (!courses.length) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">📚</div>
+          <div class="empty-state-title">The library is empty</div>
+          <div class="empty-state-text">Be the first to publish a course.</div>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = courses.map(renderCourse).join('');
+    courses.forEach(c => loadComments(c.id));
+  } catch (e) {
+    toast('Failed to load: ' + e.message, 'error');
+  } finally {
+    hideLoading();
+  }
+}
+
+function renderCourse(c) {
+  const tags = (c.tags || []).filter(Boolean).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+  const counts = c.mediaCounts || {};
+  const badges = Object.entries(counts).map(([type, count]) => {
+    const icon = type === 'video' ? '🎬' : type === 'image' ? '🖼️' : '🎵';
+    return `<span class="media-badge">${icon} <span class="mono">${count}</span></span>`;
+  }).join('');
+
+  return `
+    <article class="course" id="course-${c.id}">
+      <div class="course-meta-strip">
+        <span class="course-category">${escapeHtml(c.category || 'General')}</span>
+        <span class="course-divider">·</span>
+        <span class="course-date">${formatDate(c.createdAt)}</span>
+        <div class="course-media-badges">${badges}</div>
+      </div>
+      <div class="course-body">
+        <h3 class="course-title">${escapeHtml(c.title)}</h3>
+        <p class="course-byline">By <strong>${escapeHtml(c.instructor)}</strong></p>
+        ${c.description ? `<p class="course-description">${escapeHtml(c.description)}</p>` : ''}
+        ${tags ? `<div class="course-tags">${tags}</div>` : ''}
+        ${renderMediaViewer(c)}
+        <div class="course-actions">
+          <button class="btn btn-small btn-outline" onclick="enrollCourse('${c.id}')">📖 Enroll</button>
+          <button class="btn btn-small btn-outline" onclick="editCourse('${c.id}')">✏ Edit</button>
+          <button class="btn btn-small btn-burgundy" onclick="deleteCourse('${c.id}')">Delete</button>
+        </div>
+      </div>
+      <div class="comments-section" id="comments-${c.id}">
+        <div class="comments-heading">Discussion</div>
+        <div class="comments-list"></div>
+        <div class="comment-add">
+          <input type="text" placeholder="Add a comment..." onkeypress="if(event.key==='Enter') addComment('${c.id}', this)">
+          <button onclick="addComment('${c.id}', this.previousElementSibling)">Post</button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderMediaViewer(c) {
+  const media = c.media || [];
+  if (!media.length) return '<div class="media-viewer empty">No media attached.</div>';
+
+  const grouped = { video: [], image: [], audio: [] };
+  media.forEach(m => grouped[m.mediaType]?.push(m));
+
+  const tabs = [];
+  const panels = [];
+  let firstActive = true;
+
+  for (const type of ['video', 'image', 'audio']) {
+    const items = grouped[type];
+    if (!items.length) continue;
+    const icon = type === 'video' ? '🎬' : type === 'image' ? '🖼️' : '🎵';
+    const label = type[0].toUpperCase() + type.slice(1) + (items.length > 1 ? 's' : '');
+    tabs.push(`
+      <button class="media-tab ${firstActive ? 'active' : ''}" data-tab="${c.id}-${type}"
+              onclick="switchMediaTab('${c.id}', '${type}')">
+        ${icon} ${label}<span class="media-tab-count">${items.length}</span>
+      </button>
+    `);
+    panels.push(`
+      <div class="media-content" id="panel-${c.id}-${type}" style="${firstActive ? '' : 'display:none'}">
+        ${renderMediaItems(c.id, type, items)}
+      </div>
+    `);
+    firstActive = false;
+  }
+
+  return `
+    <div class="media-viewer">
+      <div class="media-tabs">${tabs.join('')}</div>
+      ${panels.join('')}
+    </div>
+  `;
+}
+
+function renderMediaItems(courseId, type, items) {
+  if (type === 'video') {
+    // First video shown, rest as buttons to switch
+    return items.map((m, i) => `
+      <div class="media-item-with-action" style="${i === 0 ? '' : 'display:none'}" data-idx="${i}">
+        <video controls preload="metadata" src="${m.cdnUrl || m.directUrl}" data-blob="${m.blobName}"></video>
+        <button class="media-remove" onclick="removeMedia('${courseId}', '${m.blobName}')">Remove</button>
+      </div>
+    `).join('') + (items.length > 1 ? `
+      <div style="padding: 8px; background: var(--ink-soft); display: flex; gap: 6px; flex-wrap: wrap;">
+        ${items.map((m, i) => `<button class="btn btn-small ${i === 0 ? 'btn-amber' : 'btn-outline'}" style="color:var(--paper);border-color:var(--paper-tint)" onclick="switchVideoIndex('${courseId}', ${i}, this)">${i + 1}</button>`).join('')}
+      </div>` : '');
+  }
+  if (type === 'audio') {
+    return items.map(m => `
+      <div class="media-item-with-action">
+        <div class="audio-label">🎵 ${escapeHtml(m.originalName || 'Audio')}</div>
+        <audio controls preload="metadata" src="${m.cdnUrl || m.directUrl}"></audio>
+        <button class="media-remove" onclick="removeMedia('${courseId}', '${m.blobName}')">Remove</button>
+      </div>
+    `).join('');
+  }
+  if (type === 'image') {
+    return `
+      <div class="image-grid">
+        ${items.map(m => `
+          <div class="media-item-with-action">
+            <img src="${m.cdnUrl || m.directUrl}" alt="${escapeHtml(m.originalName || '')}" onclick="openLightbox('${m.cdnUrl || m.directUrl}')">
+            <button class="media-remove" onclick="removeMedia('${courseId}', '${m.blobName}')">Remove</button>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+  return '';
+}
+
+function switchMediaTab(courseId, type) {
+  document.querySelectorAll(`#course-${courseId} .media-tab`).forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === `${courseId}-${type}`);
+  });
+  document.querySelectorAll(`#course-${courseId} .media-content`).forEach(p => {
+    p.style.display = p.id === `panel-${courseId}-${type}` ? 'block' : 'none';
+  });
+}
+
+function switchVideoIndex(courseId, idx, btn) {
+  const panel = document.getElementById(`panel-${courseId}-video`);
+  panel.querySelectorAll('.media-item-with-action').forEach((el, i) => {
+    el.style.display = i === idx ? 'block' : 'none';
+  });
+  panel.querySelectorAll('.btn').forEach((b, i) => {
+    b.className = 'btn btn-small ' + (i === idx ? 'btn-amber' : 'btn-outline');
+    if (i !== idx) b.style.color = 'var(--paper)';
+  });
+}
+
+// ============================================================
+// CRUD
+// ============================================================
+async function createCourse() {
+  const title = document.getElementById('title').value.trim();
+  if (!title) return toast('Title is required', 'error');
+
+  const fd = new FormData();
+  fd.append('title', title);
+  fd.append('description', document.getElementById('description').value);
+  fd.append('instructor', document.getElementById('instructor').value);
+  fd.append('category', document.getElementById('category').value);
+  fd.append('tags', document.getElementById('tags').value);
+  selectedFiles.forEach(f => fd.append('media', f));
+
+  const btn = document.getElementById('createBtn');
+  btn.disabled = true; btn.textContent = 'Publishing...';
+  showLoading();
+
+  try {
+    const auth = await getAuthHeader();
+    const res = await fetch(API + '/courses', { method: 'POST', headers: auth, body: fd });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Upload failed');
+    }
+    // Reset form
+    ['title', 'instructor', 'description', 'tags'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('mediaInput').value = '';
+    selectedFiles = [];
+    renderFileList();
+    toast('Course published', 'success');
+    loadCourses();
+  } catch (e) {
+    toast(e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Publish course';
+    hideLoading();
+  }
+}
+
+async function editCourse(id) {
+  const newTitle = prompt('New title:');
+  if (!newTitle) return;
+  showLoading();
+  try {
+    const auth = await getAuthHeader();
+    const res = await fetch(`${API}/courses/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...auth },
+      body: JSON.stringify({ title: newTitle })
+    });
+    if (!res.ok) throw new Error((await res.json()).error);
+    toast('Course updated', 'success');
+    loadCourses();
+  } catch (e) { toast(e.message, 'error'); }
+  finally { hideLoading(); }
+}
+
+async function deleteCourse(id) {
+  if (!confirm('Delete this course? All attached media will also be removed from Blob Storage.')) return;
+  showLoading();
+  try {
+    const auth = await getAuthHeader();
+    const res = await fetch(`${API}/courses/${id}`, { method: 'DELETE', headers: auth });
+    if (!res.ok) throw new Error((await res.json()).error);
+    toast('Course deleted', 'success');
+    loadCourses();
+  } catch (e) { toast(e.message, 'error'); }
+  finally { hideLoading(); }
+}
+
+async function removeMedia(courseId, blobName) {
+  if (!confirm('Remove this media file?')) return;
+  showLoading();
+  try {
+    const auth = await getAuthHeader();
+    const res = await fetch(`${API}/courses/${courseId}/media/${blobName}`, { method: 'DELETE', headers: auth });
+    if (!res.ok) throw new Error((await res.json()).error);
+    toast('Media removed', 'success');
+    loadCourses();
+  } catch (e) { toast(e.message, 'error'); }
+  finally { hideLoading(); }
+}
+
+async function enrollCourse(id) {
+  try {
+    const auth = await getAuthHeader();
+    const res = await fetch(`${API}/courses/${id}/enroll`, { method: 'POST', headers: auth });
+    if (!res.ok) throw new Error((await res.json()).error);
+    toast('Enrolled in course', 'success');
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ============================================================
+// COMMENTS
+// ============================================================
+async function loadComments(courseId) {
+  try {
+    const res = await fetch(`${API}/courses/${courseId}/comments`);
+    const comments = await res.json();
+    const container = document.querySelector(`#comments-${courseId} .comments-list`);
+    if (!container) return;
+    if (!comments.length) {
+      container.innerHTML = '<div style="font-size:13px;color:var(--ink-soft);font-style:italic;font-family:var(--serif)">No discussion yet.</div>';
+      return;
+    }
+    container.innerHTML = comments.map(c => `
+      <div class="comment">
+        <span class="comment-author">${escapeHtml(c.authorName)}</span>
+        <span class="comment-date">${formatDate(c.createdAt)}</span>
+        <div class="comment-text">${escapeHtml(c.text)}</div>
+      </div>`).join('');
+  } catch (e) { /* silent */ }
+}
+
+async function addComment(courseId, inputEl) {
+  const text = inputEl.value.trim();
+  if (!text) return;
+  try {
+    const auth = await getAuthHeader();
+    const res = await fetch(`${API}/courses/${courseId}/comments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...auth },
+      body: JSON.stringify({ text })
+    });
+    if (!res.ok) throw new Error((await res.json()).error);
+    inputEl.value = '';
+    loadComments(courseId);
+    toast('Comment posted', 'success');
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ============================================================
+// FILE PICKER + DRAG/DROP
+// ============================================================
+const dropzone = document.getElementById('dropzone');
+const mediaInput = document.getElementById('mediaInput');
+
+mediaInput.addEventListener('change', (e) => {
+  selectedFiles = Array.from(e.target.files).slice(0, 5);
+  renderFileList();
+});
+
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragging'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragging'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragging');
+  selectedFiles = Array.from(e.dataTransfer.files).slice(0, 5);
+  renderFileList();
+});
+
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  if (!selectedFiles.length) { list.innerHTML = ''; return; }
+  list.innerHTML = selectedFiles.map((f, i) => {
+    const type = f.type.startsWith('video') ? '🎬' : f.type.startsWith('image') ? '🖼️' : f.type.startsWith('audio') ? '🎵' : '📄';
+    const sizeMB = (f.size / 1024 / 1024).toFixed(1);
+    return `
+      <div class="file-row">
+        <span class="file-icon">${type}</span>
+        <span class="file-name">${escapeHtml(f.name)}</span>
+        <span class="file-size">${sizeMB} MB</span>
+        <button class="file-remove" onclick="removeFileFromList(${i})" title="Remove">×</button>
+      </div>`;
+  }).join('');
+}
+
+function removeFileFromList(idx) {
+  selectedFiles.splice(idx, 1);
+  renderFileList();
+}
+
+// ============================================================
+// LIGHTBOX
+// ============================================================
+function openLightbox(url) {
+  document.getElementById('lightboxImg').src = url;
+  document.getElementById('lightbox').classList.add('show');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+// Boot
+initAuth();
+loadCourses();
+</script>
+
+</body>
+</html>
