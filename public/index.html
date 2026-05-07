@@ -638,7 +638,7 @@
     </div>
     <div class="nav-tools">
       <span class="user-chip" id="userChip" style="display:none"></span>
-      <button class="btn-ghost" id="signInBtn" onclick="signIn()">Sign in</button>
+      <button class="btn-ghost" id="signInBtn" onclick="showLoginModal()">Sign in</button>
       <button class="btn-ghost" id="signOutBtn" onclick="signOut()" style="display:none">Sign out</button>
     </div>
   </div>
@@ -1247,6 +1247,62 @@ function formatDate(iso) {
 // Boot
 initAuth();
 loadCourses();
+</script>
+
+
+<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(14,26,43,0.85);z-index:400;align-items:center;justify-content:center;">
+  <div style="background:#f4ecdc;padding:36px;border-radius:8px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <h2 style="font-family:serif;font-size:22px;margin:0 0 6px 0;color:#0e1a2b;">Sign in to EduStream+</h2>
+    <p style="font-size:13px;color:#666;margin:0 0 20px 0;font-style:italic;">Required to publish and manage courses.</p>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Username</label>
+      <input type="text" id="loginUsername" placeholder="admin" style="width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:4px;font-size:14px;box-sizing:border-box;">
+    </div>
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" style="width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:4px;font-size:14px;box-sizing:border-box;" onkeypress="if(event.key==='Enter')submitLogin()">
+    </div>
+    <div id="loginError" style="display:none;background:#f8d7da;color:#721c24;padding:9px 12px;border-radius:4px;font-size:13px;margin-bottom:14px;"></div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="submitLogin()" style="flex:1;padding:10px;background:#c9711a;color:white;border:none;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;">Sign in</button>
+      <button onclick="hideLoginModal()" style="padding:10px 16px;background:transparent;border:1px solid #ccc;border-radius:4px;font-size:14px;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- Simple session auth ----
+function showLoginModal() {
+  document.getElementById('loginModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('loginUsername').focus(), 100);
+}
+function hideLoginModal() {
+  document.getElementById('loginModal').style.display = 'none';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('loginUsername').value = '';
+  document.getElementById('loginPassword').value = '';
+}
+async function submitLogin() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const err = document.getElementById('loginError');
+  if (username === 'admin' && password === 'edustream2024') {
+    currentAccount = { id: 'admin', name: 'Admin User' };
+    hideLoginModal();
+    updateAuthUI();
+    toast('Signed in as Admin User', 'success');
+    loadCourses();
+  } else {
+    err.textContent = 'Invalid username or password';
+    err.style.display = 'block';
+  }
+}
+function signOut() {
+  currentAccount = null;
+  updateAuthUI();
+  toast('Signed out', 'success');
+  loadCourses();
+}
 </script>
 
 </body>
