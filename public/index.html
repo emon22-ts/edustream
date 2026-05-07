@@ -284,10 +284,10 @@ footer em{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--
       </div>
     </a>
     <nav class="header-nav">
-      <button class="nav-link active">🏠 Home</button>
-      <button class="nav-link">🧭 Explore</button>
-      <button class="nav-link">📊 Dashboard</button>
-      <button class="nav-link">🎙 Live Rooms</button>
+      <button class="nav-link active" onclick="scrollToSection('top')">🏠 Home</button>
+      <button class="nav-link" onclick="scrollToSection('library')">🧭 Explore</button>
+      <button class="nav-link" onclick="scrollToSection('upload')">📊 Dashboard</button>
+      <button class="nav-link" onclick="showLiveRooms()">🎙 Live Rooms</button>
     </nav>
     <div class="header-right">
       <div class="user-pill" id="userPill">
@@ -744,6 +744,21 @@ function closeLightbox() { document.getElementById('lightbox').classList.remove(
 // ── UTILS ──
 function escapeHtml(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function formatDate(iso) { if (!iso) return ''; return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
+
+
+function scrollToSection(section) {
+  document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+  event.target.classList.add("active");
+  if (section === "top") window.scrollTo({ top: 0, behavior: "smooth" });
+  else if (section === "library") document.querySelector(".lib-hd")?.scrollIntoView({ behavior: "smooth" });
+  else if (section === "upload") document.querySelector(".upload-panel")?.scrollIntoView({ behavior: "smooth" });
+}
+function showLiveRooms() {
+  document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+  event.target.classList.add("active");
+  toast("🎙 Live Rooms — coming soon in phase 2", "success");
+  setTimeout(() => document.querySelectorAll(".nav-link")[0].classList.add("active"), 3000);
+}
 
 // ── BOOT ──
 initAuth();
