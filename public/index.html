@@ -791,7 +791,7 @@ async function initAuth() {
       if (accounts.length) { currentAccount = accounts[0]; updateAuthUI(); }
     } else {
       // Auth disabled — show dev indicator
-      document.getElementById('signInBtn').style.display = 'none';
+      // sign in button always visible
       const chip = document.getElementById('userChip');
       chip.textContent = '';
       chip.style.display = 'none';
