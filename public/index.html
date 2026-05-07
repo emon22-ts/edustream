@@ -1245,6 +1245,11 @@ function formatDate(iso) {
 }
 
 // Boot
+// Restore session on page load
+const savedUser = sessionStorage.getItem('edustream_user');
+if (savedUser) {
+  try { currentAccount = JSON.parse(savedUser); } catch(e) {}
+}
 initAuth();
 loadCourses();
 </script>
@@ -1288,6 +1293,7 @@ async function submitLogin() {
   const err = document.getElementById('loginError');
   if (username === 'admin' && password === 'edustream2024') {
     currentAccount = { id: 'admin', name: 'Admin User' };
+    sessionStorage.setItem('edustream_user', JSON.stringify(currentAccount));
     hideLoginModal();
     updateAuthUI();
     toast('Signed in as Admin User', 'success');
@@ -1299,6 +1305,7 @@ async function submitLogin() {
 }
 function signOut() {
   currentAccount = null;
+  sessionStorage.removeItem('edustream_user');
   updateAuthUI();
   toast('Signed out', 'success');
   loadCourses();
