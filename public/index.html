@@ -632,7 +632,7 @@
   <div class="nameplate-rule"></div>
   <div class="nameplate">
     <div class="masthead">
-      <span class="masthead-eyebrow small-caps">Cloud · Native · Development</span>
+      
       <h1 class="masthead-title">EduStream<em>+</em></h1>
       <span class="masthead-tag">Watch · Listen · Learn · Grow</span>
     </div>
@@ -736,13 +736,7 @@
 
       <button class="btn btn-amber" id="createBtn" onclick="createCourse()">Publish course</button>
 
-      <div class="upload-hint">
-        <div class="checks">
-          <div>✓ Text screened by AI Content Safety</div>
-          <div>✓ Files stored in Azure Blob Storage</div>
-          <div>✓ Metadata in Cosmos DB · CDN-delivered</div>
-        </div>
-      </div>
+
     </aside>
 
     <!-- Library -->
@@ -759,10 +753,7 @@
 
 <footer>
   <div class="display-italic">EduStream+ — A cloud-native academic streaming platform</div>
-  <div class="meta">
-    Cloud Native Development (COM682) · Mahfuzur Rahman Emon · B00976168<br>
-    Architecture: App Service · Cosmos DB · Blob Storage · CDN · Key Vault · App Insights · Entra ID · Content Safety
-  </div>
+
 </footer>
 
 <div id="toast"></div>
@@ -802,8 +793,8 @@ async function initAuth() {
       // Auth disabled — show dev indicator
       document.getElementById('signInBtn').style.display = 'none';
       const chip = document.getElementById('userChip');
-      chip.textContent = '🔓 dev mode';
-      chip.style.display = 'inline-flex';
+      chip.textContent = '';
+      chip.style.display = 'none';
     }
   } catch (e) { console.warn('Auth init failed:', e); }
 }
@@ -833,7 +824,7 @@ function updateAuthUI() {
   const signOutBtn = document.getElementById('signOutBtn');
   if (currentAccount) {
     chip.innerHTML = '👤 ' + escapeHtml(currentAccount.name || currentAccount.username);
-    chip.style.display = 'inline-flex';
+    chip.style.display = 'none';
     signInBtn.style.display = 'none';
     signOutBtn.style.display = 'inline-block';
   } else {
