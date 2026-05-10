@@ -237,43 +237,13 @@ main{max-width:1280px;margin:0 auto;padding:24px 28px 80px;display:grid;grid-tem
 footer{max-width:1280px;margin:48px auto 0;padding:20px 28px;border-top:1px solid var(--rule);text-align:center;color:var(--ink-muted);font-size:12px}
 footer em{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink)}
 
-/* ── MOBILE MENU BUTTON ── */
-.hamburger{display:none;background:transparent;border:1px solid rgba(244,236,220,0.3);color:var(--paper);padding:7px 10px;border-radius:5px;font-size:18px;cursor:pointer;line-height:1}
-.mobile-nav{display:none;position:fixed;inset:0;background:rgba(14,26,43,0.95);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:8px}
-.mobile-nav.open{display:flex}
-.mobile-nav-link{color:var(--paper);font-size:20px;padding:14px 32px;border-radius:8px;text-align:center;width:240px;border:1px solid rgba(244,236,220,0.15);font-family:var(--sans);background:transparent;cursor:pointer;transition:all 0.15s}
-.mobile-nav-link:hover{background:rgba(244,236,220,0.1)}
-.mobile-nav-close{color:rgba(244,236,220,0.5);font-size:28px;position:absolute;top:20px;right:24px;background:transparent;border:none;cursor:pointer}
-.mobile-sidebar-btn{display:none}
-
 @media(max-width:900px){
-  main{grid-template-columns:1fr;padding:16px 16px 60px}
+  main{grid-template-columns:1fr}
   .sidebar{display:none}
-  .mobile-sidebar-btn{display:block;width:100%;padding:10px;background:var(--paper-tint);border:1px solid var(--rule);border-radius:var(--radius-lg);font-family:var(--sans);font-size:13px;color:var(--ink-soft);cursor:pointer;margin-bottom:16px;text-align:center}
   .two-col{grid-template-columns:1fr}
-  .hero-inner{grid-template-columns:1fr;padding:24px 16px}
+  .hero-inner{grid-template-columns:1fr}
   .hero-stats{display:none}
   .header-nav{display:none}
-  .hamburger{display:block}
-  .nameplate{padding:0 16px;gap:12px}
-  .logo-text{font-size:18px}
-  .logo-sub{display:none}
-  .upload-panel{position:static}
-  .filter-bar{padding:8px 12px;gap:6px}
-  .filter-bar input[type="search"]{min-width:120px}
-  .hero-hl{font-size:28px}
-  .lib-title{font-size:20px}
-  .c-body{padding:14px 16px}
-  .c-title{font-size:18px}
-  .c-strip{padding:8px 16px}
-  .c-comments{padding:12px 16px}
-  .two-col > aside{order:2}
-  .two-col > section{order:1}
-}
-@media(max-width:480px){
-  .pill-group{flex-wrap:wrap}
-  .hero-hl{font-size:24px}
-  .login-box{padding:24px 20px}
 }
 </style>
 </head>
@@ -314,10 +284,10 @@ footer em{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--
       </div>
     </a>
     <nav class="header-nav">
-      <button class="nav-link active" onclick="scrollToSection('top')">🏠 Home</button>
-      <button class="nav-link" onclick="scrollToSection('library')">🧭 Explore</button>
-      <button class="nav-link" onclick="scrollToSection('upload')">📊 Dashboard</button>
-      <button class="nav-link" onclick="showLiveRooms()">🎙 Live Rooms</button>
+      <button class="nav-link active">🏠 Home</button>
+      <button class="nav-link">🧭 Explore</button>
+      <button class="nav-link">📊 Dashboard</button>
+      <button class="nav-link">🎙 Live Rooms</button>
     </nav>
     <div class="header-right">
       <div class="user-pill" id="userPill">
@@ -326,17 +296,7 @@ footer em{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--
       </div>
       <button class="btn-ghost-hd" id="signInBtn" onclick="showLoginModal()">Sign in</button>
       <button class="btn-ghost-hd" id="signOutBtn" onclick="signOut()" style="display:none">Sign out</button>
-      <button class="hamburger" onclick="toggleMobileNav()">☰</button>
     </div>
-
-<!-- MOBILE NAV -->
-<div class="mobile-nav" id="mobileNav">
-  <button class="mobile-nav-close" onclick="toggleMobileNav()">✕</button>
-  <button class="mobile-nav-link" onclick="scrollToSection('top');toggleMobileNav()">🏠 Home</button>
-  <button class="mobile-nav-link" onclick="scrollToSection('library');toggleMobileNav()">🧭 Explore</button>
-  <button class="mobile-nav-link" onclick="scrollToSection('upload');toggleMobileNav()">📊 Dashboard</button>
-  <button class="mobile-nav-link" onclick="showLiveRooms();toggleMobileNav()">🎙 Live Rooms</button>
-</div>
   </div>
 </header>
 
@@ -400,8 +360,6 @@ footer em{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--
 
   <!-- CONTENT -->
   <div class="content">
-    <button class="mobile-sidebar-btn" onclick="toggleMobileSidebar()">☰ My Learning · Leaderboard · Featured</button>
-    <div class="sidebar" id="mobileSidebarDrawer" style="display:none"></div>
     <div class="filter-bar">
       <input type="search" id="searchInput" placeholder="Search title or description..." oninput="debounceSearch()">
       <select id="categoryFilter" onchange="loadCourses()">
@@ -786,40 +744,6 @@ function closeLightbox() { document.getElementById('lightbox').classList.remove(
 // ── UTILS ──
 function escapeHtml(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function formatDate(iso) { if (!iso) return ''; return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
-
-
-
-function toggleMobileNav() {
-  const nav = document.getElementById('mobileNav');
-  nav.classList.toggle('open');
-}
-function toggleMobileSidebar() {
-  const drawer = document.getElementById('mobileSidebarDrawer');
-  const sidebar = document.querySelector('aside.sidebar');
-  if (drawer.style.display === 'none') {
-    drawer.innerHTML = sidebar ? sidebar.innerHTML : '';
-    drawer.style.display = 'flex';
-    drawer.style.flexDirection = 'column';
-    drawer.style.gap = '14px';
-    drawer.style.marginBottom = '16px';
-  } else {
-    drawer.style.display = 'none';
-  }
-}
-
-function scrollToSection(section) {
-  document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-  event.target.classList.add("active");
-  if (section === "top") window.scrollTo({ top: 0, behavior: "smooth" });
-  else if (section === "library") document.querySelector(".lib-hd")?.scrollIntoView({ behavior: "smooth" });
-  else if (section === "upload") document.querySelector(".upload-panel")?.scrollIntoView({ behavior: "smooth" });
-}
-function showLiveRooms() {
-  document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-  event.target.classList.add("active");
-  toast("🎙 Live Rooms — coming soon in phase 2", "success");
-  setTimeout(() => document.querySelectorAll(".nav-link")[0].classList.add("active"), 3000);
-}
 
 // ── BOOT ──
 initAuth();

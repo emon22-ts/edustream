@@ -1,0 +1,121 @@
+/* ============================================================
+   EduStream+ Design System
+   Shared across all pages
+============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,400;9..144,0,500;9..144,1,400&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0e1a2b;--ink-soft:#2c3e55;--ink-muted:#6b7a8d;
+  --paper:#f5edd8;--paper-tint:#ede4ce;--paper-deep:#e4d9be;
+  --amber:#c9711a;--amber-deep:#a35712;--amber-pale:#fdf0e0;
+  --burgundy:#7a1f2e;--moss:#3a5c3a;--danger:#c0392b;
+  --rule:#d4c9b0;--rule-strong:#b8ac94;
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Geist",system-ui,sans-serif;
+  --mono:"Geist Mono",monospace;
+  --radius:6px;--radius-lg:10px;
+  --shadow:0 1px 3px rgba(14,26,43,0.05),0 4px 12px rgba(14,26,43,0.06);
+  --shadow-lift:0 4px 20px rgba(14,26,43,0.1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.55;min-height:100vh}
+
+/* ── LOADING BAR ── */
+.loading-bar{position:fixed;top:0;left:0;height:2px;background:var(--amber);width:0;opacity:0;transition:width 0.3s,opacity 0.2s;z-index:999}
+.loading-bar.active{width:70%;opacity:1}
+.loading-bar.done{width:100%;opacity:0}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;padding:13px 20px;background:var(--ink);color:var(--paper);border-radius:var(--radius);box-shadow:var(--shadow-lift);font-size:13px;transform:translateY(120%);opacity:0;transition:transform 0.25s,opacity 0.25s;z-index:500;max-width:340px}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{background:var(--moss)}
+#toast.error{background:var(--danger)}
+
+/* ── LIGHTBOX ── */
+.lightbox{position:fixed;inset:0;background:rgba(14,26,43,0.92);display:none;align-items:center;justify-content:center;z-index:400;padding:28px;cursor:zoom-out}
+.lightbox.show{display:flex}
+.lightbox img{max-width:100%;max-height:100%;border-radius:var(--radius)}
+
+/* ── LOGIN MODAL ── */
+#loginModal{display:none;position:fixed;inset:0;background:rgba(14,26,43,0.88);z-index:400;align-items:center;justify-content:center}
+.login-box{background:var(--paper);padding:36px;border-radius:var(--radius-lg);width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.35)}
+.login-box h2{font-family:var(--serif);font-size:24px;font-weight:500;margin-bottom:5px}
+.login-box p{font-size:13px;color:var(--ink-muted);margin-bottom:22px;font-style:italic;font-family:var(--serif)}
+.login-field{margin-bottom:13px}
+.login-field label{display:block;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin-bottom:4px}
+.login-field input{width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:var(--radius);font-size:14px;font-family:var(--sans);background:var(--paper-tint);color:var(--ink)}
+.login-field input:focus{outline:none;border-color:var(--amber)}
+#loginError{display:none;background:#f8d7da;color:#721c24;padding:9px 12px;border-radius:var(--radius);font-size:13px;margin-bottom:13px}
+.login-btns{display:flex;gap:10px}
+.btn-login{flex:1;padding:11px;background:var(--amber);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans)}
+.btn-login:hover{background:var(--amber-deep)}
+.btn-cancel{padding:11px 16px;background:transparent;color:var(--ink);border:1px solid var(--rule);border-radius:var(--radius);font-size:14px;cursor:pointer;font-family:var(--sans)}
+
+/* ── HEADER ── */
+.rule-top{height:3px;background:linear-gradient(90deg,var(--amber) 0 35%,var(--paper) 35% 65%,var(--burgundy) 65% 100%)}
+header{background:var(--ink);color:var(--paper);border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;z-index:100}
+.nameplate{max-width:1280px;margin:0 auto;padding:0 28px;height:62px;display:flex;align-items:center;gap:28px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0;cursor:pointer;border:none;background:transparent;color:inherit}
+.logo-mark{width:34px;height:34px;background:var(--amber);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-text{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-0.02em;color:var(--paper)}
+.logo-text em{font-style:italic;color:var(--amber)}
+.logo-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(244,236,220,0.4);margin-top:2px}
+.header-nav{display:flex;align-items:center;gap:1px;flex:1;justify-content:center}
+.nav-link{color:rgba(244,236,220,0.55);font-size:13px;padding:7px 14px;border-radius:5px;transition:all 0.15s;display:flex;align-items:center;gap:6px;font-weight:400;cursor:pointer;border:none;background:transparent;font-family:var(--sans)}
+.nav-link:hover{color:var(--paper);background:rgba(255,255,255,0.07)}
+.nav-link.active{color:var(--amber);background:rgba(201,113,26,0.12);font-weight:500}
+.header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.user-pill{display:none;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);padding:5px 12px 5px 5px;border-radius:999px}
+.user-pill.visible{display:flex}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--amber);color:white;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.user-name{font-size:12.5px;color:rgba(244,236,220,0.85)}
+.btn-ghost-hd{background:transparent;border:1px solid rgba(244,236,220,0.25);color:rgba(244,236,220,0.7);padding:7px 16px;border-radius:5px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:all 0.15s}
+.btn-ghost-hd:hover{border-color:rgba(244,236,220,0.5);color:var(--paper)}
+.hamburger{display:none;background:transparent;border:1px solid rgba(244,236,220,0.3);color:var(--paper);padding:7px 10px;border-radius:5px;font-size:18px;cursor:pointer}
+
+/* ── MOBILE NAV ── */
+.mobile-nav{display:none;position:fixed;inset:0;background:rgba(14,26,43,0.97);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.mobile-nav.open{display:flex}
+.mobile-nav-link{color:var(--paper);font-size:20px;padding:14px 32px;border-radius:8px;width:240px;text-align:center;border:1px solid rgba(244,236,220,0.15);font-family:var(--sans);background:transparent;cursor:pointer;transition:all 0.15s}
+.mobile-nav-link:hover{background:rgba(244,236,220,0.1)}
+.mobile-nav-close{color:rgba(244,236,220,0.5);font-size:28px;position:absolute;top:20px;right:24px;background:transparent;border:none;cursor:pointer}
+
+/* ── PAGE WRAPPER ── */
+#page-content{min-height:60vh}
+
+/* ── SHARED COMPONENTS ── */
+.btn{padding:10px 18px;border-radius:var(--radius);font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all 0.15s}
+.btn-primary{background:var(--amber);color:white}.btn-primary:hover{background:var(--amber-deep)}
+.btn-secondary{background:transparent;border:1px solid var(--ink);color:var(--ink)}.btn-secondary:hover{background:var(--ink);color:var(--paper)}
+.btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}.btn-danger:hover{background:var(--danger);color:white}
+.btn-sm{padding:6px 13px;font-size:12px}
+
+.card{background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
+.card:hover{box-shadow:var(--shadow-lift)}
+
+.empty-state{text-align:center;padding:52px 20px;background:var(--paper);border:1px dashed var(--rule);border-radius:var(--radius-lg)}
+.empty-icon{font-size:44px;margin-bottom:12px;opacity:0.4}
+.empty-title{font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:4px}
+.empty-text{color:var(--ink-muted);font-style:italic;font-family:var(--serif);font-size:14px}
+
+.page-header{margin-bottom:28px;padding-bottom:16px;border-bottom:2px solid var(--ink)}
+.page-title{font-family:var(--serif);font-size:32px;font-weight:500;letter-spacing:-0.02em}
+.page-title em{font-style:italic;color:var(--amber)}
+.page-subtitle{font-size:14px;color:var(--ink-muted);font-style:italic;font-family:var(--serif);margin-top:4px}
+
+/* ── FOOTER ── */
+footer{max-width:1280px;margin:48px auto 0;padding:20px 28px;border-top:1px solid var(--rule);text-align:center;color:var(--ink-muted);font-size:12px}
+footer em{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .header-nav{display:none}
+  .hamburger{display:block}
+  .nameplate{padding:0 16px;gap:12px}
+  .logo-text{font-size:18px}
+  .logo-sub{display:none}
+}
+@media(max-width:480px){
+  .page-title{font-size:24px}
+}
