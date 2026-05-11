@@ -353,18 +353,26 @@ function initDarkMode() {
 }
 
 function applyDarkMode(dark) {
+  var btn = document.getElementById('darkToggle');
   if (dark) {
-    document.documentElement.style.setProperty('--paper', '#1a1a2e');
-    document.documentElement.style.setProperty('--paper-tint', '#16213e');
-    document.documentElement.style.setProperty('--paper-deep', '#0f3460');
-    document.documentElement.style.setProperty('--ink', '#e0e0e0');
-    document.documentElement.style.setProperty('--ink-soft', '#b0b0c0');
-    document.documentElement.style.setProperty('--ink-muted', '#7a7a9a');
-    document.documentElement.style.setProperty('--rule', '#2a2a4a');
-    document.documentElement.style.setProperty('--rule-strong', '#3a3a5a');
-    document.documentElement.style.setProperty('--amber-pale', '#2a1a05');
-    document.querySelector('#darkToggle')?.classList.add('active');
+    // Dark mode — body and content go dark, header stays dark (it already is)
+    document.body.style.background = '#111827';
+    document.body.style.color = '#e5e7eb';
+    document.documentElement.style.setProperty('--paper', '#1f2937');
+    document.documentElement.style.setProperty('--paper-tint', '#111827');
+    document.documentElement.style.setProperty('--paper-deep', '#0f172a');
+    document.documentElement.style.setProperty('--ink', '#f9fafb');
+    document.documentElement.style.setProperty('--ink-soft', '#d1d5db');
+    document.documentElement.style.setProperty('--ink-muted', '#9ca3af');
+    document.documentElement.style.setProperty('--rule', '#374151');
+    document.documentElement.style.setProperty('--rule-strong', '#4b5563');
+    document.documentElement.style.setProperty('--amber-pale', '#1c1008');
+    document.documentElement.style.setProperty('--burgundy', '#f87171');
+    // Keep header dark (it uses --ink as bg so it stays dark)
+    if (btn) btn.textContent = '☀️';
   } else {
+    document.body.style.background = '';
+    document.body.style.color = '';
     document.documentElement.style.setProperty('--paper', '#f5edd8');
     document.documentElement.style.setProperty('--paper-tint', '#ede4ce');
     document.documentElement.style.setProperty('--paper-deep', '#e4d9be');
@@ -374,7 +382,8 @@ function applyDarkMode(dark) {
     document.documentElement.style.setProperty('--rule', '#d4c9b0');
     document.documentElement.style.setProperty('--rule-strong', '#b8ac94');
     document.documentElement.style.setProperty('--amber-pale', '#fdf0e0');
-    document.querySelector('#darkToggle')?.classList.remove('active');
+    document.documentElement.style.setProperty('--burgundy', '#7a1f2e');
+    if (btn) btn.textContent = '🌙';
   }
 }
 
