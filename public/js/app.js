@@ -366,6 +366,11 @@ function applyDarkMode(dark) {
     document.querySelectorAll('.streak-title, .streak-sub, .streak-msg').forEach(function(el){
       el.style.color = '#f9fafb';
     });
+    document.querySelectorAll('select, input, textarea').forEach(function(el){
+      el.style.color = '#f9fafb';
+      el.style.background = '#1f2937';
+      el.style.borderColor = '#374151';
+    });
     document.querySelectorAll('.hero-hl').forEach(function(el){
       el.style.color = '#f9fafb';
     });
@@ -390,6 +395,11 @@ function applyDarkMode(dark) {
     });
     document.querySelectorAll('.streak-title, .streak-sub, .streak-msg').forEach(function(el){
       el.style.color = '';
+    });
+    document.querySelectorAll('select, input, textarea').forEach(function(el){
+      el.style.color = '';
+      el.style.background = '';
+      el.style.borderColor = '';
     });
     document.querySelectorAll('.hero-hl').forEach(function(el){
       el.style.color = '';
