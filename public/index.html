@@ -172,16 +172,16 @@
 <!-- MOBILE NAV -->
 <div class='mobile-nav' id='mobileNav'>
   <button class='mobile-nav-close' onclick='toggleMobileNav()'>✕</button>
-  <button class='mobile-nav-link' data-page='home' onclick='navigate(home);toggleMobileNav()'>🏠 Home</button>
-  <button class='mobile-nav-link' data-page='explore' onclick='navigate(explore);toggleMobileNav()'>🧭 Explore</button>
-  <button class='mobile-nav-link' data-page='dashboard' onclick='navigate(dashboard);toggleMobileNav()'>📊 Dashboard</button>
-  <button class='mobile-nav-link' data-page='liverooms' onclick='navigate(liverooms);toggleMobileNav()'>🎙 Live Rooms</button>
+  <button class='mobile-nav-link' data-page='home' onclick='navigate("home");toggleMobileNav()'>🏠 Home</button>
+  <button class='mobile-nav-link' data-page='explore' onclick='navigate("explore");toggleMobileNav()'>🧭 Explore</button>
+  <button class='mobile-nav-link' data-page='dashboard' onclick='navigate("dashboard");toggleMobileNav()'>📊 Dashboard</button>
+  <button class='mobile-nav-link' data-page='liverooms' onclick='navigate("liverooms");toggleMobileNav()'>🎙 Live Rooms</button>
 </div>
 
 <div class='rule-top'></div>
 <header>
   <div class='nameplate'>
-    <button class='logo' onclick='navigate(home)'>
+    <button class='logo' onclick='navigate("home")'>
       <div class='logo-mark'>📖</div>
       <div>
         <div class='logo-text'>EduStream<em>+</em></div>
@@ -189,10 +189,10 @@
       </div>
     </button>
     <nav class='header-nav'>
-      <button class='nav-link active' data-page='home' onclick='navigate(home)'>🏠 Home</button>
-      <button class='nav-link' data-page='explore' onclick='navigate(explore)'>🧭 Explore</button>
-      <button class='nav-link' data-page='dashboard' onclick='navigate(dashboard)'>📊 Dashboard</button>
-      <button class='nav-link' data-page='liverooms' onclick='navigate(liverooms)'>🎙 Live Rooms</button>
+      <button class='nav-link active' data-page='home' onclick='navigate("home")'>🏠 Home</button>
+      <button class='nav-link' data-page='explore' onclick='navigate("explore")'>🧭 Explore</button>
+      <button class='nav-link' data-page='dashboard' onclick='navigate("dashboard")'>📊 Dashboard</button>
+      <button class='nav-link' data-page='liverooms' onclick='navigate("liverooms")'>🎙 Live Rooms</button>
     </nav>
     <div class='header-right'>
       <div class='user-pill' id='userPill'>
