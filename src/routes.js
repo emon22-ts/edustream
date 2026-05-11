@@ -13,7 +13,7 @@ const { requireAuth } = require('./middleware/auth');
 const router = express.Router();
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 1024 * 1024 * 1024 }
+  limits: { fileSize: 100 * 1024 * 1024 }
 });
 
 router.get('/health', (req, res) => {
@@ -24,6 +24,52 @@ router.get('/health', (req, res) => {
     version: '1.1.0',
     supportedMedia: Object.keys(storage.MEDIA_TYPES)
   });
+});
+
+
+// SAS token for direct browser-to-blob upload
+router.post('/upload/sas', requireAuth, async (req, res, next) => {
+  try {
+    const { fileName, mimeType } = req.body;
+    if (!fileName || !mimeType) return res.status(400).json({ error: 'fileName and mimeType required' });
+    const { generateUploadSAS } = require('./services/sas');
+    const sas = await generateUploadSAS(fileName, mimeType);
+    res.json(sas);
+  } catch(err) { next(err); }
+});
+
+// Confirm direct upload completed — register blob in course
+router.post('/upload/confirm', requireAuth, async (req, res, next) => {
+  try {
+    const { courseId, blobName, container, mediaType, originalName, mimeType, directUrl } = req.body;
+    if (!courseId || !blobName) return res.status(400).json({ error: 'courseId and blobName required' });
+    
+    const course = await db.Courses.get(courseId);
+    if (!course) return res.status(404).json({ error: 'Course not found' });
+    
+    const mediaItem = {
+      blobName, container, mediaType, originalName, mimeType,
+      directUrl: directUrl || `https://${blobName}`,
+      cdnUrl: null,
+      size: 0,
+      uploadedAt: new Date().toISOString()
+    };
+    
+    const newMedia = [...(course.media || []), mediaItem];
+    const newCounts = newMedia.reduce((acc, m) => {
+      acc[m.mediaType] = (acc[m.mediaType] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const updated = await db.Courses.update(courseId, {
+      media: newMedia,
+      mediaCounts: newCounts,
+      mediaTypes: Object.keys(newCounts)
+    });
+    
+    telemetry.trackEvent('DirectUploadConfirmed', { courseId, mediaType, blobName });
+    res.json(updated);
+  } catch(err) { next(err); }
 });
 
 router.get('/media-types', (req, res) => {

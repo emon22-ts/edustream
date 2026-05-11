@@ -147,24 +147,101 @@ registerPage('home', async function(container) {
     if (!requireAuth()) return;
     const title = document.getElementById('upTitle').value.trim();
     if (!title) return toast('Title is required', 'error');
-    const fd = new FormData();
-    fd.append('title', title);
-    fd.append('description', document.getElementById('upDescription').value);
-    fd.append('instructor', document.getElementById('upInstructor').value);
-    fd.append('category', document.getElementById('upCategory').value);
-    fd.append('tags', document.getElementById('upTags').value);
-    selectedFiles.forEach(f => fd.append('media', f));
+    
     const btn = document.getElementById('upCreateBtn');
-    btn.disabled = true; btn.textContent = 'Publishing...';
+    btn.disabled = true;
     showLoading();
+
     try {
-      await apiPost('/courses', fd, true);
-      ['upTitle','upInstructor','upDescription','upTags'].forEach(id => document.getElementById(id).value = '');
+      // Step 1: Create course metadata first (without media)
+      const fd = new FormData();
+      fd.append('title', title);
+      fd.append('description', document.getElementById('upDescription').value);
+      fd.append('instructor', document.getElementById('upInstructor').value);
+      fd.append('category', document.getElementById('upCategory').value);
+      fd.append('tags', document.getElementById('upTags').value);
+      
+      btn.textContent = 'Creating course...';
+      const course = await apiPost('/courses', fd, true);
+      
+      // Step 2: Upload each file directly to blob with progress
+      if (selectedFiles.length > 0) {
+        for (var i = 0; i < selectedFiles.length; i++) {
+          var file = selectedFiles[i];
+          btn.textContent = 'Uploading ' + (i+1) + '/' + selectedFiles.length + ': ' + file.name.slice(0,20) + '...';
+          
+          // Show progress bar
+          var progressEl = document.getElementById('upProgress');
+          if (!progressEl) {
+            progressEl = document.createElement('div');
+            progressEl.id = 'upProgress';
+            progressEl.style.cssText = 'margin:8px 0;background:var(--rule);border-radius:3px;height:6px;overflow:hidden';
+            progressEl.innerHTML = '<div id="upProgressBar" style="height:100%;background:var(--amber);width:0%;transition:width 0.3s;border-radius:3px"></div>';
+            btn.parentNode.insertBefore(progressEl, btn);
+          }
+          
+          try {
+            // Get SAS token for direct upload
+            var sasData = await apiPost('/upload/sas', { fileName: file.name, mimeType: file.type });
+            
+            // Upload directly to Azure Blob Storage with progress
+            await new Promise(function(resolve, reject) {
+              var xhr = new XMLHttpRequest();
+              xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                  var pct = Math.round((e.loaded / e.total) * 100);
+                  var bar = document.getElementById('upProgressBar');
+                  if (bar) bar.style.width = pct + '%';
+                }
+              };
+              xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) resolve();
+                else reject(new Error('Upload failed: ' + xhr.status));
+              };
+              xhr.onerror = function() { reject(new Error('Network error during upload')); };
+              xhr.open('PUT', sasData.uploadUrl);
+              xhr.setRequestHeader('x-ms-blob-type', 'BlockBlob');
+              xhr.setRequestHeader('Content-Type', file.type);
+              xhr.send(file);
+            });
+            
+            // Confirm upload with backend
+            await apiPost('/upload/confirm', {
+              courseId: course.id,
+              blobName: sasData.blobName,
+              container: sasData.container,
+              mediaType: sasData.mediaType,
+              originalName: sasData.originalName,
+              mimeType: sasData.mimeType,
+              directUrl: sasData.directUrl
+            });
+            
+          } catch(uploadErr) {
+            toast('Failed to upload ' + file.name + ': ' + uploadErr.message, 'error');
+          }
+        }
+        
+        // Remove progress bar
+        var progressEl = document.getElementById('upProgress');
+        if (progressEl) progressEl.remove();
+      }
+      
+      // Clear form
+      ['upTitle','upInstructor','upDescription','upTags'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.value = '';
+      });
       input.value = ''; selectedFiles = []; renderUpFileList();
       toast('Course published!', 'success');
       homeLoadCourses();
-    } catch(e) { toast(e.message, 'error'); }
-    finally { btn.disabled = false; btn.textContent = 'Publish course'; hideLoading(); }
+      
+    } catch(e) { 
+      toast(e.message, 'error'); 
+    } finally { 
+      btn.disabled = false; 
+      btn.textContent = 'Publish course'; 
+      hideLoading(); 
+    }
   };
 
   // Search debounce
