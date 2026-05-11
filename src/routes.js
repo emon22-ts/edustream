@@ -283,3 +283,92 @@ router.get('/auth/status', (req, res) => {
 });
 
 module.exports = router;
+
+// ============================================================
+// USER REGISTRATION & AUTH
+// ============================================================
+const { TableClient, AzureNamedKeyCredential } = require('@azure/data-tables');
+const crypto = require('crypto');
+
+function hashPassword(password) {
+  return crypto.createHash('sha256').update(password + 'edustream-salt-2024').digest('hex');
+}
+
+let usersTable;
+async function getUsersTable() {
+  if (usersTable) return usersTable;
+  const conn = require('./config').config.storageConnectionString;
+  const accountMatch = conn.match(/AccountName=([^;]+)/);
+  const keyMatch = conn.match(/AccountKey=([^;]+)/);
+  const account = accountMatch[1], key = keyMatch[1];
+  const credential = new AzureNamedKeyCredential(account, key);
+  usersTable = new TableClient(`https://${account}.table.core.windows.net`, 'users', credential);
+  await usersTable.createTable().catch(e => { if (e.statusCode !== 409) throw e; });
+  return usersTable;
+}
+
+router.post('/auth/register', async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email and password are required' });
+    }
+    if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    const username = email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const table = await getUsersTable();
+    // Check email taken
+    try {
+      await table.getEntity('user', username);
+      return res.status(400).json({ error: 'An account with this email already exists' });
+    } catch(e) { if (e.statusCode !== 404) throw e; }
+    // Create user
+    await table.createEntity({
+      partitionKey: 'user',
+      rowKey: username,
+      name, email, username,
+      passwordHash: hashPassword(password),
+      createdAt: new Date().toISOString(),
+      points: 0, streak: 0
+    });
+    const user = { id: username, name, username, email };
+    req.session.user = user;
+    res.status(201).json({ success: true, user });
+  } catch(err) { next(err); }
+});
+
+router.post('/auth/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+
+    // Check admin shortcut
+    if (email === 'admin' && password === 'edustream2024') {
+      const user = { id: 'admin', name: 'Admin User', username: 'admin', email: 'admin' };
+      req.session.user = user;
+      return res.json({ success: true, user });
+    }
+
+    const username = email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const table = await getUsersTable();
+    let entity;
+    try { entity = await table.getEntity('user', username); }
+    catch(e) { return res.status(401).json({ error: 'Invalid email or password' }); }
+
+    if (entity.passwordHash !== hashPassword(password)) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    const user = { id: entity.rowKey, name: entity.name, username: entity.rowKey, email: entity.email };
+    req.session.user = user;
+    res.json({ success: true, user });
+  } catch(err) { next(err); }
+});
+
+router.post('/auth/logout', (req, res) => {
+  req.session.destroy();
+  res.json({ success: true });
+});
+
+router.get('/auth/me', (req, res) => {
+  if (req.session?.user) res.json({ authenticated: true, user: req.session.user });
+  else res.json({ authenticated: false, user: null });
+});

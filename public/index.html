@@ -1,53 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <title>EduStream+ · A Cloud Library of Knowledge</title>
-<meta name="description" content="A cloud-powered academic streaming platform. Watch, listen, learn.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.85em' font-size='90'>📖</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,400;9..144,0,500;9..144,1,400&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name='description' content='A cloud-powered academic streaming platform.'>
+<link rel='icon' href='data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 100 100&quot;><text y=&quot;.85em&quot; font-size=&quot;90&quot;>📖</text></svg>'>
+<link rel='stylesheet' href='/css/main.css'>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ink:#0e1a2b;--ink-soft:#2c3e55;--ink-muted:#6b7a8d;
-  --paper:#f5edd8;--paper-tint:#ede4ce;--paper-deep:#e4d9be;
-  --amber:#c9711a;--amber-deep:#a35712;--amber-pale:#fdf0e0;
-  --burgundy:#7a1f2e;--moss:#3a5c3a;
-  --rule:#d4c9b0;--rule-strong:#b8ac94;
-  --serif:"Fraunces",Georgia,serif;
-  --sans:"Geist",system-ui,sans-serif;
-  --mono:"Geist Mono",monospace;
-  --radius:6px;--radius-lg:10px;
-  --shadow:0 1px 3px rgba(14,26,43,0.05),0 4px 12px rgba(14,26,43,0.06);
-  --shadow-lift:0 4px 20px rgba(14,26,43,0.1);
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.55;min-height:100vh}
-
-/* ── HEADER ── */
-.rule-top{height:3px;background:linear-gradient(90deg,var(--amber) 0 35%,var(--paper) 35% 65%,var(--burgundy) 65% 100%)}
-header{background:var(--ink);color:var(--paper);border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;z-index:100}
-.nameplate{max-width:1280px;margin:0 auto;padding:0 28px;height:62px;display:flex;align-items:center;gap:28px}
-.logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
-.logo-mark{width:34px;height:34px;background:var(--amber);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.logo-text{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-0.02em;color:var(--paper)}
-.logo-text em{font-style:italic;color:var(--amber)}
-.logo-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(244,236,220,0.4);margin-top:2px}
-.header-nav{display:flex;align-items:center;gap:1px;flex:1;justify-content:center}
-.nav-link{color:rgba(244,236,220,0.55);font-size:13px;padding:7px 14px;border-radius:5px;text-decoration:none;transition:all 0.15s;display:flex;align-items:center;gap:6px;font-weight:400;letter-spacing:0.01em;cursor:pointer;border:none;background:transparent;font-family:var(--sans)}
-.nav-link:hover{color:var(--paper);background:rgba(255,255,255,0.07)}
-.nav-link.active{color:var(--amber);background:rgba(201,113,26,0.12);font-weight:500}
-.header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.user-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);padding:5px 12px 5px 5px;border-radius:999px;display:none}
-.avatar{width:26px;height:26px;border-radius:50%;background:var(--amber);color:white;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
-.user-name{font-size:12.5px;color:rgba(244,236,220,0.85)}
-.btn-ghost-hd{background:transparent;border:1px solid rgba(244,236,220,0.25);color:rgba(244,236,220,0.7);padding:7px 16px;border-radius:5px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:all 0.15s}
-.btn-ghost-hd:hover{border-color:rgba(244,236,220,0.5);color:var(--paper)}
-
-/* ── HERO BAND ── */
 .hero-band{background:var(--ink);border-bottom:1px solid rgba(255,255,255,0.05)}
 .hero-inner{max-width:1280px;margin:0 auto;padding:32px 28px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
 .hero-hl{font-family:var(--serif);font-size:clamp(32px,4.5vw,54px);font-weight:400;line-height:1.05;letter-spacing:-0.03em;color:var(--paper)}
@@ -58,14 +18,11 @@ header{background:var(--ink);color:var(--paper);border-bottom:1px solid rgba(255
 .stat:first-child{border-left:none;padding-left:0}
 .stat-num{font-family:var(--serif);font-size:26px;font-weight:500;color:var(--amber);line-height:1}
 .stat-label{font-size:10px;color:rgba(244,236,220,0.4);margin-top:3px;letter-spacing:0.06em;text-transform:uppercase}
-
-/* ── MAIN LAYOUT ── */
-main{max-width:1280px;margin:0 auto;padding:24px 28px 80px;display:grid;grid-template-columns:248px 1fr;gap:24px}
-
-/* ── SIDEBAR ── */
+.home-main{max-width:1280px;margin:0 auto;padding:24px 28px 80px;display:grid;grid-template-columns:248px 1fr;gap:24px}
+.home-content{min-width:0}
 .sidebar{display:flex;flex-direction:column;gap:14px}
 .s-card{background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow)}
-.s-head{padding:11px 16px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between}
+.s-head{padding:11px 16px;border-bottom:1px solid var(--rule)}
 .s-head-title{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;font-weight:600;color:var(--burgundy)}
 .s-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--rule);cursor:pointer;transition:background 0.12s}
 .s-row:last-child{border-bottom:none}
@@ -98,661 +55,177 @@ main{max-width:1280px;margin:0 auto;padding:24px 28px 80px;display:grid;grid-tem
 .s-day.today{background:rgba(201,113,26,0.25);color:var(--amber);border:1px solid rgba(201,113,26,0.5)}
 .s-day.off{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.2)}
 .streak-msg{font-size:11px;color:rgba(244,236,220,0.35);font-style:italic;font-family:var(--serif)}
-
-/* ── CONTENT ── */
-.content{min-width:0}
 .filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--paper-tint);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:10px 14px;margin-bottom:20px;box-shadow:var(--shadow)}
-.filter-bar input[type="search"]{flex:1;min-width:180px;padding:7px 11px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px;color:var(--ink)}
-.filter-bar input:focus,.filter-bar select:focus{outline:none;border-color:var(--amber)}
+.filter-bar input[type=search]{flex:1;min-width:180px;padding:7px 11px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px;color:var(--ink)}
 .filter-bar select{padding:7px 11px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px}
 .pill-group{display:flex;gap:4px}
 .pill{padding:5px 12px;border-radius:999px;border:1px solid var(--rule);font-size:12px;cursor:pointer;background:var(--paper);color:var(--ink-muted);transition:all 0.12s;font-family:var(--sans)}
-.pill:hover{border-color:var(--amber)}
 .pill.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-
-/* ── TWO COL ── */
 .two-col{display:grid;grid-template-columns:360px 1fr;gap:22px;align-items:start}
-
-/* ── UPLOAD PANEL ── */
 .upload-panel{background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:22px;position:sticky;top:78px;box-shadow:var(--shadow)}
 .up-title{font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:3px}
 .up-sub{font-size:12px;font-style:italic;font-family:var(--serif);color:var(--ink-muted);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--rule)}
 .field{margin-bottom:11px}
 .field label{display:block;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin-bottom:4px}
-.field input[type="text"],.field textarea,.field select{width:100%;padding:8px 11px;background:var(--paper-tint);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px;color:var(--ink);transition:border-color 0.15s}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--amber);background:var(--paper)}
-.field textarea{min-height:60px;resize:vertical;line-height:1.5}
+.field input[type=text],.field textarea,.field select{width:100%;padding:8px 11px;background:var(--paper-tint);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px;color:var(--ink)}
+.field textarea{min-height:60px;resize:vertical}
 .dropzone{border:2px dashed var(--rule);border-radius:var(--radius-lg);padding:20px;text-align:center;background:var(--paper-tint);margin-bottom:12px;cursor:pointer;transition:all 0.15s}
 .dropzone:hover,.dropzone.dragging{border-color:var(--amber);background:var(--amber-pale)}
 .dz-icon{font-size:24px;margin-bottom:6px}
 .dz-title{font-size:13px;font-weight:500;margin-bottom:2px}
 .dz-hint{font-size:11px;color:var(--ink-muted);font-style:italic;font-family:var(--serif)}
-.dropzone input[type="file"]{display:block;width:100%;margin-top:8px;font-size:12px;color:var(--ink-soft)}
 .file-list{margin-top:10px;display:flex;flex-direction:column;gap:5px}
 .file-row{display:flex;align-items:center;gap:8px;background:var(--paper-tint);padding:7px 10px;border-radius:var(--radius);font-size:12px;border:1px solid var(--rule)}
-.file-row .fi{font-size:16px}
-.file-row .fn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.file-row .fs{color:var(--ink-muted);font-size:10px;font-family:var(--mono)}
-.file-row .fr{background:transparent;border:none;cursor:pointer;color:var(--burgundy);font-size:15px;padding:0 3px}
 .media-type-pills{display:flex;gap:5px;margin-bottom:12px}
 .mt-pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;border:1px solid var(--rule);font-size:11.5px;color:var(--ink-muted);background:var(--paper-tint)}
-.btn-pub{width:100%;padding:11px;background:var(--amber);color:white;border:none;border-radius:var(--radius);font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;letter-spacing:0.01em;transition:background 0.15s}
-.btn-pub:hover:not(:disabled){background:var(--amber-deep)}
-.btn-pub:disabled{opacity:0.5;cursor:not-allowed}
-
-/* ── LIBRARY ── */
 .lib-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
-.lib-title{font-family:var(--serif);font-size:24px;font-weight:500;letter-spacing:-0.01em}
+.lib-title{font-family:var(--serif);font-size:24px;font-weight:500}
 .lib-title em{font-style:italic;color:var(--amber)}
 .lib-count{font-size:12px;font-family:var(--mono);color:var(--ink-muted)}
-.course-list{display:flex;flex-direction:column;gap:18px}
-
-/* ── COURSE CARD ── */
-.course{background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-lg);overflow:hidden;transition:box-shadow 0.2s;animation:fadeUp 0.4s ease-out}
+.course{animation:fadeUp 0.35s ease-out}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.course:hover{box-shadow:var(--shadow-lift)}
 .c-strip{display:flex;align-items:center;gap:12px;padding:9px 20px;background:var(--paper-tint);border-bottom:1px solid var(--rule);font-size:11px}
 .c-cat{font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--burgundy)}
 .c-date{font-style:italic;font-family:var(--serif);color:var(--ink-muted)}
-.c-badges{margin-left:auto;display:flex;gap:5px}
-.c-badge{background:var(--ink);color:var(--paper);padding:2px 8px;border-radius:999px;font-size:10px;letter-spacing:0.04em}
 .c-body{padding:18px 22px}
-.c-title{font-family:var(--serif);font-size:21px;font-weight:500;letter-spacing:-0.015em;margin-bottom:4px;color:var(--ink)}
+.c-title{font-family:var(--serif);font-size:21px;font-weight:500;margin-bottom:4px;color:var(--ink);cursor:pointer}
+.c-title:hover{color:var(--amber)}
 .c-by{font-size:12px;font-style:italic;font-family:var(--serif);color:var(--ink-muted);margin-bottom:10px}
 .c-by strong{font-style:normal;color:var(--ink);font-weight:600}
 .c-desc{font-size:14px;line-height:1.65;color:var(--ink-soft);margin-bottom:12px}
 .c-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
 .c-tag{border:1px solid var(--amber);color:var(--amber-deep);padding:2px 9px;border-radius:999px;font-size:11px;font-weight:500}
-.media-viewer{background:var(--ink);border-radius:var(--radius);overflow:hidden;margin-bottom:12px}
-.media-viewer.empty{background:var(--paper-tint);padding:28px;text-align:center;color:var(--ink-muted);font-style:italic;font-family:var(--serif);font-size:13px}
-.media-tabbar{display:flex;background:rgba(255,255,255,0.05);padding:3px;gap:2px}
-.m-tab{flex:1;padding:7px;text-align:center;font-size:11.5px;color:rgba(244,236,220,0.5);border-radius:4px;cursor:pointer;transition:all 0.15s;border:none;font-family:var(--sans);background:transparent}
-.m-tab:hover{color:rgba(244,236,220,0.8)}
-.m-tab.active{background:var(--ink);color:var(--amber);font-weight:600}
-.m-tab-count{font-family:var(--mono);font-size:10px;margin-left:3px;opacity:0.6}
-.media-content video{width:100%;display:block;background:black;max-height:400px}
-.media-content audio{width:calc(100% - 28px);margin:12px 14px;display:block}
-.audio-label{color:var(--paper);padding:10px 14px 0;font-size:12px;font-family:var(--mono);display:flex;align-items:center;gap:6px}
-.image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:4px;padding:4px;background:rgba(255,255,255,0.03)}
-.image-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:3px;cursor:pointer;transition:opacity 0.2s}
-.image-grid img:hover{opacity:0.85}
-.media-item-wrap{position:relative}
-.media-remove{position:absolute;top:5px;right:5px;background:rgba(14,26,43,0.85);color:white;border:none;padding:3px 7px;border-radius:3px;cursor:pointer;font-size:10px;opacity:0;transition:opacity 0.15s;font-family:var(--sans)}
-.media-item-wrap:hover .media-remove{opacity:1}
 .c-actions{display:flex;gap:7px;flex-wrap:wrap;padding-top:10px;border-top:1px dashed var(--rule)}
-.btn-a{padding:6px 13px;border-radius:var(--radius);font-size:12px;font-family:var(--sans);cursor:pointer;border:1px solid var(--ink);background:transparent;color:var(--ink);transition:all 0.15s;display:flex;align-items:center;gap:4px}
-.btn-a:hover{background:var(--ink);color:var(--paper)}
-.btn-a.del{border-color:var(--burgundy);color:var(--burgundy)}
-.btn-a.del:hover{background:var(--burgundy);color:white}
 .c-comments{padding:14px 22px;background:var(--paper-tint);border-top:1px solid var(--rule)}
 .c-comments-head{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600;color:var(--ink-muted);margin-bottom:10px}
-.comment-row{border-left:2px solid var(--rule);padding:3px 0 3px 12px;margin-bottom:8px;font-size:13px}
+.comment-row{border-left:2px solid var(--rule);padding:3px 0 3px 12px;margin-bottom:8px}
 .comment-author{font-weight:600;font-size:12px;color:var(--ink)}
 .comment-date{font-size:11px;color:var(--ink-muted);font-style:italic;margin-left:6px;font-family:var(--serif)}
-.comment-text{color:var(--ink-soft);margin-top:2px;line-height:1.5}
+.comment-text{color:var(--ink-soft);margin-top:2px;font-size:13px;line-height:1.5}
 .comment-add{display:flex;gap:7px;margin-top:8px}
-.comment-add input{flex:1;padding:8px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px;color:var(--ink);transition:border-color 0.15s}
-.comment-add input:focus{outline:none;border-color:var(--amber)}
-.comment-add button{background:var(--amber);color:white;border:none;padding:8px 14px;border-radius:var(--radius);cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:500;transition:background 0.15s}
-.comment-add button:hover{background:var(--amber-deep)}
-
-/* ── EMPTY STATE ── */
-.empty-state{text-align:center;padding:52px 20px;background:var(--paper);border:1px dashed var(--rule);border-radius:var(--radius-lg)}
-.empty-icon{font-size:44px;margin-bottom:12px;opacity:0.4}
-.empty-title{font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:4px}
-.empty-text{color:var(--ink-muted);font-style:italic;font-family:var(--serif);font-size:14px}
-
-/* ── TOAST ── */
-#toast{position:fixed;bottom:24px;right:24px;padding:13px 20px;background:var(--ink);color:var(--paper);border-radius:var(--radius);box-shadow:var(--shadow-lift);font-size:13px;transform:translateY(120%);opacity:0;transition:transform 0.25s,opacity 0.25s;z-index:200;max-width:340px}
-#toast.show{transform:translateY(0);opacity:1}
-#toast.success{background:var(--moss)}
-#toast.error{background:var(--burgundy)}
-
-/* ── LOADING BAR ── */
-.loading-bar{position:fixed;top:0;left:0;height:2px;background:var(--amber);width:0;opacity:0;transition:width 0.3s,opacity 0.2s;z-index:999}
-.loading-bar.active{width:70%;opacity:1}
-.loading-bar.done{width:100%;opacity:0}
-
-/* ── LIGHTBOX ── */
-.lightbox{position:fixed;inset:0;background:rgba(14,26,43,0.92);display:none;align-items:center;justify-content:center;z-index:300;padding:28px;cursor:zoom-out}
-.lightbox.show{display:flex}
-.lightbox img{max-width:100%;max-height:100%;border-radius:var(--radius)}
-
-/* ── LOGIN MODAL ── */
-#loginModal{display:none;position:fixed;inset:0;background:rgba(14,26,43,0.88);z-index:400;align-items:center;justify-content:center}
-.login-box{background:var(--paper);padding:36px;border-radius:var(--radius-lg);width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.35)}
-.login-box h2{font-family:var(--serif);font-size:24px;font-weight:500;margin-bottom:5px;color:var(--ink)}
-.login-box p{font-size:13px;color:var(--ink-muted);margin-bottom:22px;font-style:italic;font-family:var(--serif)}
-.login-field{margin-bottom:13px}
-.login-field label{display:block;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin-bottom:4px}
-.login-field input{width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:var(--radius);font-size:14px;font-family:var(--sans);background:var(--paper-tint);color:var(--ink)}
-.login-field input:focus{outline:none;border-color:var(--amber)}
-#loginError{display:none;background:#f8d7da;color:#721c24;padding:9px 12px;border-radius:var(--radius);font-size:13px;margin-bottom:13px}
-.login-btns{display:flex;gap:10px}
-.btn-login{flex:1;padding:11px;background:var(--amber);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:background 0.15s}
-.btn-login:hover{background:var(--amber-deep)}
-.btn-cancel{padding:11px 16px;background:transparent;color:var(--ink);border:1px solid var(--rule);border-radius:var(--radius);font-size:14px;cursor:pointer;font-family:var(--sans)}
-
-/* ── FOOTER ── */
-footer{max-width:1280px;margin:48px auto 0;padding:20px 28px;border-top:1px solid var(--rule);text-align:center;color:var(--ink-muted);font-size:12px}
-footer em{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink)}
-
+.comment-add input{flex:1;padding:8px 12px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px;color:var(--ink)}
+.comment-add button{background:var(--amber);color:white;border:none;padding:8px 14px;border-radius:var(--radius);cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:500}
+.media-viewer{background:var(--ink);border-radius:var(--radius);overflow:hidden;margin-bottom:12px}
+.media-tabbar{display:flex;background:rgba(255,255,255,0.05);padding:3px;gap:2px}
+.m-tab{flex:1;padding:7px;text-align:center;font-size:11.5px;color:rgba(244,236,220,0.5);border-radius:4px;cursor:pointer;border:none;font-family:var(--sans);background:transparent}
+.m-tab.active{background:var(--ink);color:var(--amber);font-weight:600}
+.m-tab-count{font-family:var(--mono);font-size:10px;margin-left:3px;opacity:0.6}
+/* AUTH MODAL */
+#authModal{display:none;position:fixed;inset:0;background:rgba(14,26,43,0.88);z-index:400;align-items:center;justify-content:center}
+.auth-box{background:var(--paper);padding:0;border-radius:var(--radius-lg);width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.35);overflow:hidden}
+.auth-tabs{display:flex;border-bottom:1px solid var(--rule)}
+.auth-tab{flex:1;padding:14px;text-align:center;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;border:none;background:var(--paper-tint);color:var(--ink-muted);transition:all 0.15s}
+.auth-tab.active{background:var(--paper);color:var(--amber);border-bottom:2px solid var(--amber)}
+.auth-body{padding:28px}
+.auth-field{margin-bottom:13px}
+.auth-field label{display:block;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin-bottom:4px}
+.auth-field input{width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:var(--radius);font-size:14px;font-family:var(--sans);background:var(--paper-tint);color:var(--ink)}
+.auth-field input:focus{outline:none;border-color:var(--amber)}
+#authError{display:none;background:#f8d7da;color:#721c24;padding:9px 12px;border-radius:var(--radius);font-size:13px;margin-bottom:13px}
+.auth-btn{width:100%;padding:11px;background:var(--amber);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);margin-bottom:8px}
+.auth-btn:hover{background:var(--amber-deep)}
+.auth-cancel{width:100%;padding:9px;background:transparent;color:var(--ink-muted);border:1px solid var(--rule);border-radius:var(--radius);font-size:13px;cursor:pointer;font-family:var(--sans)}
 @media(max-width:900px){
-  main{grid-template-columns:1fr}
+  .home-main{grid-template-columns:1fr;padding:16px 16px 60px}
   .sidebar{display:none}
   .two-col{grid-template-columns:1fr}
-  .hero-inner{grid-template-columns:1fr}
+  .hero-inner{grid-template-columns:1fr;padding:24px 16px}
   .hero-stats{display:none}
-  .header-nav{display:none}
+  .upload-panel{position:static}
 }
 </style>
 </head>
 <body>
+<div class='loading-bar' id='loadingBar'></div>
 
-<div class="loading-bar" id="loadingBar"></div>
-
-<!-- LOGIN MODAL -->
-<div id="loginModal">
-  <div class="login-box">
-    <h2>Sign in to EduStream+</h2>
-    <p>Authentication required to publish and manage courses.</p>
-    <div class="login-field">
-      <label>Username</label>
-      <input type="text" id="loginUsername" placeholder="admin">
+<!-- AUTH MODAL -->
+<div id='authModal'>
+  <div class='auth-box'>
+    <div class='auth-tabs'>
+      <button class='auth-tab active' data-tab='login' onclick='switchAuthTab(login)'>Sign In</button>
+      <button class='auth-tab' data-tab='register' onclick='switchAuthTab(register)'>Register</button>
     </div>
-    <div class="login-field">
-      <label>Password</label>
-      <input type="password" id="loginPassword" placeholder="••••••••" onkeypress="if(event.key==='Enter')submitLogin()">
-    </div>
-    <div id="loginError"></div>
-    <div class="login-btns">
-      <button class="btn-login" onclick="submitLogin()">Sign in</button>
-      <button class="btn-cancel" onclick="hideLoginModal()">Cancel</button>
+    <div class='auth-body'>
+      <div id='authError'></div>
+      <!-- LOGIN FORM -->
+      <div id='loginForm'>
+        <div class='auth-field'><label>Email</label><input type='email' id='loginEmail' placeholder='your@email.com' onkeypress='if(event.key===Enter)submitLogin()'></div>
+        <div class='auth-field'><label>Password</label><input type='password' id='loginPassword' placeholder='••••••••' onkeypress='if(event.key===Enter)submitLogin()'></div>
+        <button class='auth-btn' onclick='submitLogin()'>Sign In</button>
+        <button class='auth-cancel' onclick='hideAuthModal()'>Cancel</button>
+        <div style='text-align:center;margin-top:12px;font-size:13px;color:var(--ink-muted)'>No account? <span onclick='switchAuthTab(register)' style='color:var(--amber);cursor:pointer;font-weight:500'>Register here</span></div>
+      </div>
+      <!-- REGISTER FORM -->
+      <div id='registerForm' style='display:none'>
+        <div class='auth-field'><label>Full Name</label><input type='text' id='regName' placeholder='Your name'></div>
+        <div class='auth-field'><label>Email</label><input type='email' id='regEmail' placeholder='your@email.com'></div>
+        <div class='auth-field'><label>Password</label><input type='password' id='regPassword' placeholder='Min 6 characters'></div>
+        <div class='auth-field'><label>Confirm Password</label><input type='password' id='regConfirm' placeholder='Repeat password' onkeypress='if(event.key===Enter)submitRegister()'></div>
+        <button class='auth-btn' onclick='submitRegister()'>Create Account</button>
+        <button class='auth-cancel' onclick='hideAuthModal()'>Cancel</button>
+        <div style='text-align:center;margin-top:12px;font-size:13px;color:var(--ink-muted)'>Already have an account? <span onclick='switchAuthTab(login)' style='color:var(--amber);cursor:pointer;font-weight:500'>Sign in</span></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- HEADER -->
-<div class="rule-top"></div>
+<!-- MOBILE NAV -->
+<div class='mobile-nav' id='mobileNav'>
+  <button class='mobile-nav-close' onclick='toggleMobileNav()'>✕</button>
+  <button class='mobile-nav-link' data-page='home' onclick='navigate(home);toggleMobileNav()'>🏠 Home</button>
+  <button class='mobile-nav-link' data-page='explore' onclick='navigate(explore);toggleMobileNav()'>🧭 Explore</button>
+  <button class='mobile-nav-link' data-page='dashboard' onclick='navigate(dashboard);toggleMobileNav()'>📊 Dashboard</button>
+  <button class='mobile-nav-link' data-page='liverooms' onclick='navigate(liverooms);toggleMobileNav()'>🎙 Live Rooms</button>
+</div>
+
+<div class='rule-top'></div>
 <header>
-  <div class="nameplate">
-    <a class="logo" href="#">
-      <div class="logo-mark">📖</div>
+  <div class='nameplate'>
+    <button class='logo' onclick='navigate(home)'>
+      <div class='logo-mark'>📖</div>
       <div>
-        <div class="logo-text">EduStream<em>+</em></div>
-        <div class="logo-sub">Watch · Listen · Learn</div>
+        <div class='logo-text'>EduStream<em>+</em></div>
+        <div class='logo-sub'>Watch · Listen · Learn</div>
       </div>
-    </a>
-    <nav class="header-nav">
-      <button class="nav-link active">🏠 Home</button>
-      <button class="nav-link">🧭 Explore</button>
-      <button class="nav-link">📊 Dashboard</button>
-      <button class="nav-link">🎙 Live Rooms</button>
+    </button>
+    <nav class='header-nav'>
+      <button class='nav-link active' data-page='home' onclick='navigate(home)'>🏠 Home</button>
+      <button class='nav-link' data-page='explore' onclick='navigate(explore)'>🧭 Explore</button>
+      <button class='nav-link' data-page='dashboard' onclick='navigate(dashboard)'>📊 Dashboard</button>
+      <button class='nav-link' data-page='liverooms' onclick='navigate(liverooms)'>🎙 Live Rooms</button>
     </nav>
-    <div class="header-right">
-      <div class="user-pill" id="userPill">
-        <div class="avatar" id="userAvatar">ME</div>
-        <span class="user-name" id="userName"></span>
+    <div class='header-right'>
+      <div class='user-pill' id='userPill'>
+        <div class='avatar' id='userAvatar'>ME</div>
+        <span class='user-name' id='userName'></span>
       </div>
-      <button class="btn-ghost-hd" id="signInBtn" onclick="showLoginModal()">Sign in</button>
-      <button class="btn-ghost-hd" id="signOutBtn" onclick="signOut()" style="display:none">Sign out</button>
+      <button class='btn-ghost-hd' id='signInBtn' onclick='showLoginModal()'>Sign in</button>
+      <button class='btn-ghost-hd' id='signOutBtn' onclick='signOut()' style='display:none'>Sign out</button>
+      <button class='hamburger' onclick='toggleMobileNav()'>☰</button>
     </div>
   </div>
 </header>
 
-<!-- HERO BAND -->
-<div class="hero-band">
-  <div class="hero-inner">
-    <div class="hero-hl">
-      A cloud library of <em>knowledge</em>,<br>
-      delivered <em>on demand</em><span class="dot">.</span>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><div class="stat-num" id="statRequests">—</div><div class="stat-label">Requests today</div></div>
-      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Failures</div></div>
-      <div class="stat"><div class="stat-num" id="statCourses">0</div><div class="stat-label">Courses live</div></div>
-    </div>
-  </div>
-</div>
+<div id='page-content'></div>
+<footer><em>EduStream+ — A cloud-native academic streaming platform</em></footer>
+<div id='toast'></div>
+<div class='lightbox' id='lightbox' onclick='closeLightbox()'><img id='lightboxImg' alt=''></div>
 
-<main>
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="s-card">
-      <div class="s-head"><span class="s-head-title">My Learning</span></div>
-      <div class="s-row"><div class="s-icon">📚</div><span class="s-label">My Courses</span><span class="s-badge" id="sideCount">0</span></div>
-      <div class="s-row"><div class="s-icon">🔖</div><span class="s-label">Saved</span><span class="s-badge">—</span></div>
-      <div class="s-row"><div class="s-icon">⏱</div><span class="s-label">In Progress</span><span class="s-badge">—</span></div>
-      <div class="s-row"><div class="s-icon">🏆</div><span class="s-label">Completed</span><span class="s-badge">—</span></div>
-    </div>
-
-    <div class="s-card">
-      <div class="s-head"><span class="s-head-title">Featured this week</span></div>
-      <div class="feat-item"><div class="feat-rank">#1 TRENDING</div><div class="feat-title">Azure Serverless Deep Dive</div><div class="feat-meta">🎬 Video · 42 enrolled</div></div>
-      <div class="feat-item"><div class="feat-rank">#2 TRENDING</div><div class="feat-title">Machine Learning Basics</div><div class="feat-meta">🖼 Images · 🎵 Audio · 31 enrolled</div></div>
-      <div class="feat-item"><div class="feat-rank">#3 TRENDING</div><div class="feat-title">Cloud Security Fundamentals</div><div class="feat-meta">🎬 Video · 28 enrolled</div></div>
-    </div>
-
-    <div class="s-card">
-      <div class="s-head"><span class="s-head-title">Leaderboard</span></div>
-      <div class="lb-row"><span class="lb-pos">1</span><div class="lb-av">ME</div><span class="lb-name">Dr. Emon</span><span class="lb-pts">940</span><div class="lb-bar-wrap"><div class="lb-bar" style="width:100%"></div></div></div>
-      <div class="lb-row"><span class="lb-pos">2</span><div class="lb-av">SK</div><span class="lb-name">Sarah K.</span><span class="lb-pts">820</span><div class="lb-bar-wrap"><div class="lb-bar" style="width:87%"></div></div></div>
-      <div class="lb-row"><span class="lb-pos">3</span><div class="lb-av">JT</div><span class="lb-name">James T.</span><span class="lb-pts">775</span><div class="lb-bar-wrap"><div class="lb-bar" style="width:82%"></div></div></div>
-      <div class="lb-row"><span class="lb-pos">4</span><div class="lb-av">PM</div><span class="lb-name">Priya M.</span><span class="lb-pts">690</span><div class="lb-bar-wrap"><div class="lb-bar" style="width:73%"></div></div></div>
-    </div>
-
-    <div class="streak-card">
-      <div class="streak-top">
-        <div class="streak-num">7</div>
-        <div>
-          <div class="streak-title">Day streak 🔥</div>
-          <div class="streak-sub">Keep it up — you're on a roll</div>
-        </div>
-      </div>
-      <div class="streak-days">
-        <div class="s-day done">M</div><div class="s-day done">T</div><div class="s-day done">W</div>
-        <div class="s-day done">T</div><div class="s-day done">F</div><div class="s-day done">S</div>
-        <div class="s-day today">S</div>
-      </div>
-      <div class="streak-msg">7 days in a row — your best yet</div>
-    </div>
-  </aside>
-
-  <!-- CONTENT -->
-  <div class="content">
-    <div class="filter-bar">
-      <input type="search" id="searchInput" placeholder="Search title or description..." oninput="debounceSearch()">
-      <select id="categoryFilter" onchange="loadCourses()">
-        <option value="">All categories</option>
-        <option>General</option><option>Technology</option><option>Business</option>
-        <option>Science</option><option>Arts</option><option>Humanities</option>
-      </select>
-      <div class="pill-group" id="mediaFilter">
-        <button class="pill active" data-type="" onclick="setMediaFilter('')">All</button>
-        <button class="pill" data-type="video" onclick="setMediaFilter('video')">🎬 Video</button>
-        <button class="pill" data-type="image" onclick="setMediaFilter('image')">🖼 Image</button>
-        <button class="pill" data-type="audio" onclick="setMediaFilter('audio')">🎵 Audio</button>
-      </div>
-    </div>
-
-    <div class="two-col">
-      <!-- UPLOAD PANEL -->
-      <aside class="upload-panel">
-        <h3 class="up-title">Contribute a course</h3>
-        <p class="up-sub">Upload videos, images, and audio together.</p>
-        <div class="field"><label>Title</label><input type="text" id="title" placeholder="e.g. Foundations of Cloud Computing"></div>
-        <div class="field"><label>Instructor</label><input type="text" id="instructor" placeholder="e.g. Dr. Patel"></div>
-        <div class="field"><label>Description</label><textarea id="description" placeholder="What will learners gain?"></textarea></div>
-        <div class="field"><label>Category</label>
-          <select id="category">
-            <option>General</option><option>Technology</option><option>Business</option>
-            <option>Science</option><option>Arts</option><option>Humanities</option>
-          </select>
-        </div>
-        <div class="field"><label>Tags (comma-separated)</label><input type="text" id="tags" placeholder="azure, cloud, serverless"></div>
-        <div class="field">
-          <label>Media files (video · image · audio)</label>
-          <div class="dropzone" id="dropzone" onclick="document.getElementById('mediaInput').click()">
-            <div class="dz-icon">📥</div>
-            <div class="dz-title">Drop files or click to browse</div>
-            <div class="dz-hint">Up to 5 files · video 100MB · image 20MB · audio 50MB</div>
-            <input type="file" id="mediaInput" multiple accept="video/*,image/*,audio/*" style="display:none">
-          </div>
-          <div class="file-list" id="fileList"></div>
-        </div>
-        <div class="media-type-pills">
-          <div class="mt-pill">🎬 Video</div>
-          <div class="mt-pill">🖼 Image</div>
-          <div class="mt-pill">🎵 Audio</div>
-        </div>
-        <button class="btn-pub" id="createBtn" onclick="createCourse()">Publish course</button>
-      </aside>
-
-      <!-- LIBRARY -->
-      <section>
-        <div class="lib-hd">
-          <h2 class="lib-title">The <em>Library</em></h2>
-          <span class="lib-count" id="courseCount">0 courses</span>
-        </div>
-        <div id="courses" class="course-list"></div>
-      </section>
-    </div>
-  </div>
-</main>
-
-<footer>
-  <em>EduStream+ — A cloud-native academic streaming platform</em>
-</footer>
-
-<div id="toast"></div>
-<div class="lightbox" id="lightbox" onclick="closeLightbox()"><img id="lightboxImg" alt=""></div>
-
-<script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
+<script src='/js/app.js'></script>
+<script src='/pages/home.js'></script>
+<script src='/pages/explore.js'></script>
+<script src='/pages/course.js'></script>
+<script src='/pages/dashboard.js'></script>
+<script src='/pages/liverooms.js'></script>
 <script>
-const API = '/api';
-let currentAccount = null;
-let mediaFilter = '';
-let selectedFiles = [];
-
-// ── AUTH ──
-function showLoginModal() {
-  document.getElementById('loginModal').style.display = 'flex';
-  setTimeout(() => document.getElementById('loginUsername').focus(), 100);
-}
-function hideLoginModal() {
-  document.getElementById('loginModal').style.display = 'none';
-  document.getElementById('loginError').style.display = 'none';
-  document.getElementById('loginUsername').value = '';
-  document.getElementById('loginPassword').value = '';
-}
-async function submitLogin() {
-  const username = document.getElementById('loginUsername').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  const err = document.getElementById('loginError');
-  if (username === 'admin' && password === 'edustream2024') {
-    currentAccount = { id: 'admin', name: 'Admin User' };
-    sessionStorage.setItem('edustream_user', JSON.stringify(currentAccount));
-    hideLoginModal();
-    updateAuthUI();
-    toast('Signed in as Admin User', 'success');
-    loadCourses();
-  } else {
-    err.textContent = 'Invalid username or password';
-    err.style.display = 'block';
-  }
-}
-function signOut() {
-  currentAccount = null;
-  sessionStorage.removeItem('edustream_user');
-  updateAuthUI();
-  toast('Signed out', 'success');
-  loadCourses();
-}
-function updateAuthUI() {
-  const pill = document.getElementById('userPill');
-  const signInBtn = document.getElementById('signInBtn');
-  const signOutBtn = document.getElementById('signOutBtn');
-  const userName = document.getElementById('userName');
-  if (currentAccount) {
-    userName.textContent = currentAccount.name;
-    pill.style.display = 'flex';
-    signInBtn.style.display = 'none';
-    signOutBtn.style.display = 'inline-block';
-  } else {
-    pill.style.display = 'none';
-    signInBtn.style.display = 'inline-block';
-    signOutBtn.style.display = 'none';
-  }
-}
-async function getAuthHeader() { return {}; }
-function initAuth() {
-  const saved = sessionStorage.getItem('edustream_user');
-  if (saved) { try { currentAccount = JSON.parse(saved); } catch(e) {} }
-  updateAuthUI();
-}
-
-// ── TOAST + LOADING ──
-function toast(msg, type = 'success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'show ' + type;
-  setTimeout(() => t.className = '', 4000);
-}
-function showLoading() { const lb = document.getElementById('loadingBar'); lb.className = 'active'; }
-function hideLoading() { const lb = document.getElementById('loadingBar'); lb.className = 'done'; setTimeout(() => lb.className = '', 300); }
-
-// ── COURSES ──
-let searchDebounce;
-function debounceSearch() { clearTimeout(searchDebounce); searchDebounce = setTimeout(loadCourses, 300); }
-function setMediaFilter(type) {
-  mediaFilter = type;
-  document.querySelectorAll('#mediaFilter .pill').forEach(p => p.classList.toggle('active', p.dataset.type === type));
-  loadCourses();
-}
-
-async function loadCourses() {
-  showLoading();
-  try {
-    const search = document.getElementById('searchInput').value;
-    const category = document.getElementById('categoryFilter').value;
-    const params = new URLSearchParams();
-    if (search) params.set('search', search);
-    if (category) params.set('category', category);
-    if (mediaFilter) params.set('mediaType', mediaFilter);
-    const res = await fetch(`${API}/courses?${params}`);
-    const courses = await res.json();
-    const count = courses.length;
-    document.getElementById('courseCount').textContent = `${count} ${count === 1 ? 'course' : 'courses'}`;
-    document.getElementById('statCourses').textContent = count;
-    document.getElementById('sideCount').textContent = count;
-    const list = document.getElementById('courses');
-    if (!courses.length) {
-      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📚</div><div class="empty-title">The library is empty</div><div class="empty-text">Be the first to publish a course.</div></div>`;
-      return;
-    }
-    list.innerHTML = courses.map(renderCourse).join('');
-    courses.forEach(c => loadComments(c.id));
-  } catch(e) { toast('Failed to load: ' + e.message, 'error'); }
-  finally { hideLoading(); }
-}
-
-function renderCourse(c) {
-  const tags = (c.tags || []).filter(Boolean).map(t => `<span class="c-tag">${escapeHtml(t)}</span>`).join('');
-  const counts = c.mediaCounts || {};
-  const badges = Object.entries(counts).map(([type, n]) => {
-    const icon = type === 'video' ? '🎬' : type === 'image' ? '🖼' : '🎵';
-    return `<span class="c-badge">${icon} ${n}</span>`;
-  }).join('');
-  return `
-    <article class="course" id="course-${c.id}">
-      <div class="c-strip">
-        <span class="c-cat">${escapeHtml(c.category || 'General')}</span>
-        <span style="color:var(--rule-strong)">·</span>
-        <span class="c-date">${formatDate(c.createdAt)}</span>
-        <div class="c-badges">${badges}</div>
-      </div>
-      <div class="c-body">
-        <h3 class="c-title">${escapeHtml(c.title)}</h3>
-        <p class="c-by">By <strong>${escapeHtml(c.instructor)}</strong></p>
-        ${c.description ? `<p class="c-desc">${escapeHtml(c.description)}</p>` : ''}
-        ${tags ? `<div class="c-tags">${tags}</div>` : ''}
-        ${renderMediaViewer(c)}
-        <div class="c-actions">
-          <button class="btn-a" onclick="enrollCourse('${c.id}')">📖 Enroll</button>
-          <button class="btn-a" onclick="editCourse('${c.id}')">✏ Edit</button>
-          <button class="btn-a del" onclick="deleteCourse('${c.id}')">🗑 Delete</button>
-        </div>
-      </div>
-      <div class="c-comments" id="comments-${c.id}">
-        <div class="c-comments-head">Discussion</div>
-        <div class="comments-list"></div>
-        <div class="comment-add">
-          <input type="text" placeholder="Add a comment..." onkeypress="if(event.key==='Enter') addComment('${c.id}', this)">
-          <button onclick="addComment('${c.id}', this.previousElementSibling)">Post</button>
-        </div>
-      </div>
-    </article>`;
-}
-
-function renderMediaViewer(c) {
-  const media = c.media || [];
-  if (!media.length) return '<div class="media-viewer empty">No media attached.</div>';
-  const grouped = { video: [], image: [], audio: [] };
-  media.forEach(m => grouped[m.mediaType]?.push(m));
-  const tabs = [], panels = [];
-  let first = true;
-  for (const type of ['video', 'image', 'audio']) {
-    const items = grouped[type];
-    if (!items.length) continue;
-    const icon = type === 'video' ? '🎬' : type === 'image' ? '🖼' : '🎵';
-    const label = type[0].toUpperCase() + type.slice(1) + (items.length > 1 ? 's' : '');
-    tabs.push(`<button class="m-tab ${first ? 'active' : ''}" data-tab="${c.id}-${type}" onclick="switchMediaTab('${c.id}','${type}')">${icon} ${label}<span class="m-tab-count">${items.length}</span></button>`);
-    panels.push(`<div class="media-content" id="panel-${c.id}-${type}" style="${first ? '' : 'display:none'}">${renderMediaItems(c.id, type, items)}</div>`);
-    first = false;
-  }
-  return `<div class="media-viewer"><div class="media-tabbar">${tabs.join('')}</div>${panels.join('')}</div>`;
-}
-
-function renderMediaItems(courseId, type, items) {
-  if (type === 'video') return items.map((m, i) => `
-    <div class="media-item-wrap" style="${i > 0 ? 'display:none' : ''}">
-      <video controls preload="metadata" src="${m.cdnUrl || m.directUrl}"></video>
-      <button class="media-remove" onclick="removeMedia('${courseId}','${m.blobName}')">Remove</button>
-    </div>`).join('');
-  if (type === 'audio') return items.map(m => `
-    <div class="media-item-wrap">
-      <div class="audio-label">🎵 ${escapeHtml(m.originalName || 'Audio')}</div>
-      <audio controls preload="metadata" src="${m.cdnUrl || m.directUrl}"></audio>
-      <button class="media-remove" onclick="removeMedia('${courseId}','${m.blobName}')">Remove</button>
-    </div>`).join('');
-  if (type === 'image') return `<div class="image-grid">${items.map(m => `
-    <div class="media-item-wrap">
-      <img src="${m.cdnUrl || m.directUrl}" alt="${escapeHtml(m.originalName || '')}" onclick="openLightbox('${m.cdnUrl || m.directUrl}')">
-      <button class="media-remove" onclick="removeMedia('${courseId}','${m.blobName}')">Remove</button>
-    </div>`).join('')}</div>`;
-  return '';
-}
-
-function switchMediaTab(courseId, type) {
-  document.querySelectorAll(`#course-${courseId} .m-tab`).forEach(t => t.classList.toggle('active', t.dataset.tab === `${courseId}-${type}`));
-  document.querySelectorAll(`#course-${courseId} .media-content`).forEach(p => p.style.display = p.id === `panel-${courseId}-${type}` ? 'block' : 'none');
-}
-
-// ── CRUD ──
-async function createCourse() {
-  const title = document.getElementById('title').value.trim();
-  if (!title) return toast('Title is required', 'error');
-  const fd = new FormData();
-  fd.append('title', title);
-  fd.append('description', document.getElementById('description').value);
-  fd.append('instructor', document.getElementById('instructor').value);
-  fd.append('category', document.getElementById('category').value);
-  fd.append('tags', document.getElementById('tags').value);
-  selectedFiles.forEach(f => fd.append('media', f));
-  const btn = document.getElementById('createBtn');
-  btn.disabled = true; btn.textContent = 'Publishing...';
-  showLoading();
-  try {
-    const auth = await getAuthHeader();
-    const res = await fetch(API + '/courses', { method: 'POST', headers: auth, body: fd });
-    if (!res.ok) throw new Error((await res.json()).error || 'Upload failed');
-    ['title','instructor','description','tags'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('mediaInput').value = '';
-    selectedFiles = []; renderFileList();
-    toast('Course published', 'success');
-    loadCourses();
-  } catch(e) { toast(e.message, 'error'); }
-  finally { btn.disabled = false; btn.textContent = 'Publish course'; hideLoading(); }
-}
-
-async function editCourse(id) {
-  const t = prompt('New title:');
-  if (!t) return;
-  showLoading();
-  try {
-    const auth = await getAuthHeader();
-    const res = await fetch(`${API}/courses/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', ...auth }, body: JSON.stringify({ title: t }) });
-    if (!res.ok) throw new Error((await res.json()).error);
-    toast('Course updated', 'success'); loadCourses();
-  } catch(e) { toast(e.message, 'error'); }
-  finally { hideLoading(); }
-}
-
-async function deleteCourse(id) {
-  if (!confirm('Delete this course? All attached media will be removed from Blob Storage.')) return;
-  showLoading();
-  try {
-    const auth = await getAuthHeader();
-    const res = await fetch(`${API}/courses/${id}`, { method: 'DELETE', headers: auth });
-    if (!res.ok) throw new Error((await res.json()).error);
-    toast('Course deleted', 'success'); loadCourses();
-  } catch(e) { toast(e.message, 'error'); }
-  finally { hideLoading(); }
-}
-
-async function removeMedia(courseId, blobName) {
-  if (!confirm('Remove this media file?')) return;
-  showLoading();
-  try {
-    const auth = await getAuthHeader();
-    const res = await fetch(`${API}/courses/${courseId}/media/${blobName}`, { method: 'DELETE', headers: auth });
-    if (!res.ok) throw new Error((await res.json()).error);
-    toast('Media removed', 'success'); loadCourses();
-  } catch(e) { toast(e.message, 'error'); }
-  finally { hideLoading(); }
-}
-
-async function enrollCourse(id) {
-  try {
-    const auth = await getAuthHeader();
-    const res = await fetch(`${API}/courses/${id}/enroll`, { method: 'POST', headers: auth });
-    if (!res.ok) throw new Error((await res.json()).error);
-    toast('Enrolled in course', 'success');
-  } catch(e) { toast(e.message, 'error'); }
-}
-
-async function loadComments(courseId) {
-  try {
-    const res = await fetch(`${API}/courses/${courseId}/comments`);
-    const comments = await res.json();
-    const container = document.querySelector(`#comments-${courseId} .comments-list`);
-    if (!container) return;
-    if (!comments.length) { container.innerHTML = '<div style="font-size:13px;color:var(--ink-muted);font-style:italic;font-family:var(--serif)">No discussion yet.</div>'; return; }
-    container.innerHTML = comments.map(c => `
-      <div class="comment-row">
-        <span class="comment-author">${escapeHtml(c.authorName)}</span>
-        <span class="comment-date">${formatDate(c.createdAt)}</span>
-        <div class="comment-text">${escapeHtml(c.text)}</div>
-      </div>`).join('');
-  } catch(e) {}
-}
-
-async function addComment(courseId, inputEl) {
-  const text = inputEl.value.trim();
-  if (!text) return;
-  try {
-    const auth = await getAuthHeader();
-    const res = await fetch(`${API}/courses/${courseId}/comments`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...auth }, body: JSON.stringify({ text }) });
-    if (!res.ok) throw new Error((await res.json()).error);
-    inputEl.value = '';
-    loadComments(courseId);
-    toast('Comment posted', 'success');
-  } catch(e) { toast(e.message, 'error'); }
-}
-
-// ── FILE PICKER ──
-const dropzone = document.getElementById('dropzone');
-const mediaInput = document.getElementById('mediaInput');
-mediaInput.addEventListener('change', e => { selectedFiles = Array.from(e.target.files).slice(0, 5); renderFileList(); });
-dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragging'); });
-dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragging'));
-dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('dragging'); selectedFiles = Array.from(e.dataTransfer.files).slice(0, 5); renderFileList(); });
-
-function renderFileList() {
-  const list = document.getElementById('fileList');
-  if (!selectedFiles.length) { list.innerHTML = ''; return; }
-  list.innerHTML = selectedFiles.map((f, i) => {
-    const icon = f.type.startsWith('video') ? '🎬' : f.type.startsWith('image') ? '🖼' : f.type.startsWith('audio') ? '🎵' : '📄';
-    return `<div class="file-row"><span class="fi">${icon}</span><span class="fn">${escapeHtml(f.name)}</span><span class="fs">${(f.size/1024/1024).toFixed(1)} MB</span><button class="fr" onclick="removeFileFromList(${i})">×</button></div>`;
-  }).join('');
-}
-function removeFileFromList(idx) { selectedFiles.splice(idx, 1); renderFileList(); }
-
-// ── LIGHTBOX ──
-function openLightbox(url) { document.getElementById('lightboxImg').src = url; document.getElementById('lightbox').classList.add('show'); }
-function closeLightbox() { document.getElementById('lightbox').classList.remove('show'); }
-
-// ── UTILS ──
-function escapeHtml(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function formatDate(iso) { if (!iso) return ''; return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
-
-// ── BOOT ──
 initAuth();
-loadCourses();
-
-// Fetch live stat count
-fetch('/api/courses').then(r => r.json()).then(cs => {
-  document.getElementById('statRequests').textContent = '✓';
-}).catch(() => {});
+var path = window.location.pathname;
+var initialPage = 'home', initialParams = {};
+if (path.startsWith('/explore')) initialPage = 'explore';
+else if (path.startsWith('/dashboard')) initialPage = 'dashboard';
+else if (path.startsWith('/liverooms')) initialPage = 'liverooms';
+else if (path.startsWith('/course/')) { initialPage = 'course'; initialParams = { id: path.split('/course/')[1] }; }
+navigate(initialPage, initialParams, false);
 </script>
 </body>
 </html>
