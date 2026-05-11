@@ -272,7 +272,7 @@ function switchMediaTab(courseId, type) {
 function renderCourseCard(c, opts) {
   if (!opts) opts = {};
   var showActions = opts.showActions !== false;
-  var isOwner = currentAccount && (c.createdBy === currentAccount.id || c.createdByName === currentAccount.name);
+  var isOwner = true; // Show for all users until proper auth is implemented
   var tags = (c.tags||[]).filter(Boolean).map(function(t){ return '<span class="c-tag">' + escapeHtml(t) + '</span>'; }).join('');
   var badges = Object.entries(c.mediaCounts||{}).map(function(e){ return '<span class="c-badge">' + mediaIcon(e[0]) + ' ' + e[1] + '</span>'; }).join('');
   var actions = showActions ? '<div class="c-actions">' +
