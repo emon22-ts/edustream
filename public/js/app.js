@@ -272,9 +272,13 @@ function switchMediaTab(courseId, type) {
 function renderCourseCard(c, opts) {
   if (!opts) opts = {};
   var showActions = opts.showActions !== false;
-  var isOwner = true; // Show for all users until proper auth is implemented
+  var isOwner = currentAccount && (c.createdBy === currentAccount.id || c.createdByName === currentAccount.name);
   var tags = (c.tags||[]).filter(Boolean).map(function(t){ return '<span class="c-tag">' + escapeHtml(t) + '</span>'; }).join('');
   var badges = Object.entries(c.mediaCounts||{}).map(function(e){ return '<span class="c-badge">' + mediaIcon(e[0]) + ' ' + e[1] + '</span>'; }).join('');
+  // Add ratings and progress
+  var ratingsHtml = renderStars(c.id, 0);
+  var progressHtml = '<div class="progress-wrap">' + renderProgressBar(c.id) + '</div>';
+
   var actions = showActions ? '<div class="c-actions">' +
     '<button class="btn btn-sm btn-secondary" onclick="navigate(\'course\',{id:\'' + c.id + '\'})">📖 View</button>' +
     '<button class="btn btn-sm btn-secondary" onclick="enrollCourse(\'' + c.id + '\')">+ Enroll</button>' +
@@ -289,7 +293,7 @@ function renderCourseCard(c, opts) {
     '<p class="c-by">By <strong>' + escapeHtml(c.instructor) + '</strong></p>' +
     (c.description ? '<p class="c-desc">' + escapeHtml(c.description) + '</p>' : '') +
     (tags ? '<div class="c-tags">' + tags + '</div>' : '') +
-    renderMediaViewer(c) + actions + '</div>' + commentSection + '</article>';
+    renderMediaViewer(c) + ratingsHtml + progressHtml + actions + '</div>' + commentSection + '</article>';
 }
 
 // ── GLOBAL CRUD ──
@@ -340,4 +344,116 @@ async function loadComments(courseId) {
     if (!comments.length) { el.innerHTML = '<div style="font-size:13px;color:var(--ink-muted);font-style:italic">No comments yet.</div>'; return; }
     el.innerHTML = comments.map(function(c){ return '<div class="comment-row"><span class="comment-author">' + escapeHtml(c.authorName) + '</span><span class="comment-date">' + formatRelative(c.createdAt) + '</span><div class="comment-text">' + escapeHtml(c.text) + '</div></div>'; }).join('');
   } catch(e) {}
+}
+
+// ── DARK MODE ──
+function initDarkMode() {
+  const saved = localStorage.getItem('edustream_theme');
+  if (saved === 'dark') applyDarkMode(true);
+}
+
+function applyDarkMode(dark) {
+  if (dark) {
+    document.documentElement.style.setProperty('--paper', '#1a1a2e');
+    document.documentElement.style.setProperty('--paper-tint', '#16213e');
+    document.documentElement.style.setProperty('--paper-deep', '#0f3460');
+    document.documentElement.style.setProperty('--ink', '#e0e0e0');
+    document.documentElement.style.setProperty('--ink-soft', '#b0b0c0');
+    document.documentElement.style.setProperty('--ink-muted', '#7a7a9a');
+    document.documentElement.style.setProperty('--rule', '#2a2a4a');
+    document.documentElement.style.setProperty('--rule-strong', '#3a3a5a');
+    document.documentElement.style.setProperty('--amber-pale', '#2a1a05');
+    document.querySelector('#darkToggle')?.classList.add('active');
+  } else {
+    document.documentElement.style.setProperty('--paper', '#f5edd8');
+    document.documentElement.style.setProperty('--paper-tint', '#ede4ce');
+    document.documentElement.style.setProperty('--paper-deep', '#e4d9be');
+    document.documentElement.style.setProperty('--ink', '#0e1a2b');
+    document.documentElement.style.setProperty('--ink-soft', '#2c3e55');
+    document.documentElement.style.setProperty('--ink-muted', '#6b7a8d');
+    document.documentElement.style.setProperty('--rule', '#d4c9b0');
+    document.documentElement.style.setProperty('--rule-strong', '#b8ac94');
+    document.documentElement.style.setProperty('--amber-pale', '#fdf0e0');
+    document.querySelector('#darkToggle')?.classList.remove('active');
+  }
+}
+
+function toggleDarkMode() {
+  var isDark = localStorage.getItem('edustream_theme') === 'dark';
+  isDark = !isDark;
+  localStorage.setItem('edustream_theme', isDark ? 'dark' : 'light');
+  applyDarkMode(isDark);
+  toast(isDark ? '🌙 Dark mode on' : '☀️ Light mode on', 'success');
+}
+
+// ── RATINGS ──
+function renderStars(courseId, currentRating) {
+  if (!currentRating) currentRating = 0;
+  var avg = getRating(courseId);
+  var html = '<div class="rating-stars" style="display:flex;align-items:center;gap:6px;margin-bottom:10px">';
+  html += '<span style="font-size:11px;color:var(--ink-muted)">Rate:</span>';
+  for (var i = 1; i <= 5; i++) {
+    var filled = i <= Math.round(avg.avg);
+    html += '<span onclick="rateCoure(\'' + courseId + '\',' + i + ')" style="cursor:pointer;font-size:20px;color:' + (filled ? '#f5a623' : 'var(--rule-strong)') + ';transition:color 0.15s" onmouseover="this.style.color=\'#f5a623\'" onmouseout="this.style.color=\'' + (filled ? '#f5a623' : 'var(--rule-strong)') + '\'">★</span>';
+  }
+  html += '<span style="font-size:12px;color:var(--ink-muted);font-family:var(--mono)">' + (avg.count > 0 ? avg.avg.toFixed(1) + ' (' + avg.count + ')' : 'No ratings') + '</span>';
+  html += '</div>';
+  return html;
+}
+
+function getRating(courseId) {
+  var ratings = JSON.parse(localStorage.getItem('ratings_' + courseId) || '[]');
+  if (!ratings.length) return { avg: 0, count: 0 };
+  var avg = ratings.reduce(function(s, r) { return s + r; }, 0) / ratings.length;
+  return { avg: avg, count: ratings.length };
+}
+
+function rateCoure(courseId, stars) {
+  if (!requireAuth()) return;
+  var ratings = JSON.parse(localStorage.getItem('ratings_' + courseId) || '[]');
+  ratings.push(stars);
+  localStorage.setItem('ratings_' + courseId, JSON.stringify(ratings));
+  // Update stars display
+  var containers = document.querySelectorAll('.rating-stars');
+  containers.forEach(function(el) {
+    if (el.closest('[id="course-' + courseId + '"]')) {
+      el.outerHTML = renderStars(courseId, stars);
+    }
+  });
+  toast('Rated ' + stars + ' ★', 'success');
+}
+
+// ── PROGRESS TRACKING ──
+function getProgress(courseId) {
+  return parseInt(localStorage.getItem('progress_' + courseId) || '0');
+}
+
+function setProgress(courseId, pct) {
+  localStorage.setItem('progress_' + courseId, Math.min(100, Math.max(0, pct)));
+}
+
+function renderProgressBar(courseId) {
+  var pct = getProgress(courseId);
+  return '<div style="margin-bottom:10px">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">' +
+    '<span style="font-size:11px;color:var(--ink-muted)">Progress</span>' +
+    '<span style="font-size:11px;font-family:var(--mono);color:var(--ink-muted)">' + pct + '%</span>' +
+    '</div>' +
+    '<div style="height:4px;background:var(--rule);border-radius:2px;overflow:hidden">' +
+    '<div style="height:100%;background:var(--amber);border-radius:2px;width:' + pct + '%;transition:width 0.3s"></div>' +
+    '</div>' +
+    '<div style="display:flex;gap:6px;margin-top:6px">' +
+    [25, 50, 75, 100].map(function(p) {
+      return '<button onclick="updateProgress(\'' + courseId + '\',' + p + ')" style="flex:1;padding:3px;font-size:10px;border:1px solid var(--rule);background:' + (pct >= p ? 'var(--amber)' : 'transparent') + ';color:' + (pct >= p ? 'white' : 'var(--ink-muted)') + ';border-radius:3px;cursor:pointer;font-family:var(--sans)">' + p + '%</button>';
+    }).join('') +
+    '</div>' +
+    '</div>';
+}
+
+function updateProgress(courseId, pct) {
+  setProgress(courseId, pct);
+  // Re-render progress bar
+  var el = document.querySelector('#course-' + courseId + ' .progress-wrap');
+  if (el) el.outerHTML = '<div class="progress-wrap">' + renderProgressBar(courseId) + '</div>';
+  toast('Progress updated to ' + pct + '%', 'success');
 }
