@@ -58,7 +58,7 @@ header{background:var(--ink);color:var(--paper);border-bottom:1px solid rgba(255
 .nameplate{max-width:1280px;margin:0 auto;padding:0 28px;height:62px;display:flex;align-items:center;gap:28px}
 .logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0;cursor:pointer;border:none;background:transparent;color:inherit}
 .logo-mark{width:34px;height:34px;background:var(--amber);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.logo-text{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-0.02em;color:var(--paper)}
+.logo-text{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-0.02em;color:#f5edd8}
 .logo-text em{font-style:italic;color:var(--amber)}
 .logo-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(244,236,220,0.4);margin-top:2px}
 .header-nav{display:flex;align-items:center;gap:1px;flex:1;justify-content:center}
