@@ -358,6 +358,13 @@ function applyDarkMode(dark) {
     // Dark mode — body and content go dark, header stays dark (it already is)
     document.body.style.background = '#111827';
     document.body.style.color = '#e5e7eb';
+    // Fix hero band and header which use --ink as background
+    document.querySelectorAll('.hero-band, header').forEach(function(el){
+      el.style.background = '#0a0f1e';
+    });
+    document.querySelectorAll('.hero-hl').forEach(function(el){
+      el.style.color = '#f9fafb';
+    });
     document.documentElement.style.setProperty('--paper', '#1f2937');
     document.documentElement.style.setProperty('--paper-tint', '#111827');
     document.documentElement.style.setProperty('--paper-deep', '#0f172a');
@@ -373,6 +380,12 @@ function applyDarkMode(dark) {
   } else {
     document.body.style.background = '';
     document.body.style.color = '';
+    document.querySelectorAll('.hero-band, header').forEach(function(el){
+      el.style.background = '';
+    });
+    document.querySelectorAll('.hero-hl').forEach(function(el){
+      el.style.color = '';
+    });
     document.documentElement.style.setProperty('--paper', '#f5edd8');
     document.documentElement.style.setProperty('--paper-tint', '#ede4ce');
     document.documentElement.style.setProperty('--paper-deep', '#e4d9be');
