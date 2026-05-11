@@ -2,6 +2,7 @@
 // EduStream+ main server entry point
 
 const express = require('express');
+const session = require('express-session');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -29,6 +30,12 @@ async function main() {
   app.use(helmet({ contentSecurityPolicy: false }));
 
   app.use(cors());
+app.use(session({
+  secret: 'edustream-secret-2024',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
+}));
   app.use(express.json({ limit: '1mb' }));
   app.use(morgan('combined'));
   app.use(telemetry.middleware());
