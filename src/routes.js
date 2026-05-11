@@ -13,7 +13,7 @@ const { requireAuth } = require('./middleware/auth');
 const router = express.Router();
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 100 * 1024 * 1024 }
+  limits: { fileSize: 1024 * 1024 * 1024 }
 });
 
 router.get('/health', (req, res) => {

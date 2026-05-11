@@ -90,7 +90,7 @@ registerPage('home', async function(container) {
               <div class="dropzone" id="upDropzone" onclick="document.getElementById('upMediaInput').click()">
                 <div class="dz-icon">📥</div>
                 <div class="dz-title">Drop files or click to browse</div>
-                <div class="dz-hint">video 100MB · image 20MB · audio 50MB · up to 5 files</div>
+                <div class="dz-hint">video 1GB · image 100MB · audio 200MB · up to 5 files</div>
                 <input type="file" id="upMediaInput" multiple accept="video/*,image/*,audio/*" style="display:none">
               </div>
               <div class="file-list" id="upFileList"></div>

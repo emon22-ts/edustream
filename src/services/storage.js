@@ -11,21 +11,21 @@ const MEDIA_TYPES = {
     container: 'videos',
     mimePrefixes: ['video/'],
     allowedMimes: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-matroska'],
-    maxSizeMB: 100,
+    maxSizeMB: 1024,
     icon: '🎬'
   },
   image: {
     container: 'images',
     mimePrefixes: ['image/'],
     allowedMimes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
-    maxSizeMB: 20,
+    maxSizeMB: 100,
     icon: '🖼️'
   },
   audio: {
     container: 'audio',
     mimePrefixes: ['audio/'],
     allowedMimes: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/webm', 'audio/mp4', 'audio/x-m4a', 'audio/aac'],
-    maxSizeMB: 50,
+    maxSizeMB: 200,
     icon: '🎵'
   }
 };
