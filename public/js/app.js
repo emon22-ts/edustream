@@ -363,6 +363,9 @@ function applyDarkMode(dark) {
       el.style.background = '#0a0f1e';
       el.style.border = '1px solid #374151';
     });
+    document.querySelectorAll('.streak-title, .streak-sub, .streak-msg').forEach(function(el){
+      el.style.color = '#f9fafb';
+    });
     document.querySelectorAll('.hero-hl').forEach(function(el){
       el.style.color = '#f9fafb';
     });
@@ -384,6 +387,9 @@ function applyDarkMode(dark) {
     document.querySelectorAll('.hero-band, header, .streak-card').forEach(function(el){
       el.style.background = '';
       el.style.border = '';
+    });
+    document.querySelectorAll('.streak-title, .streak-sub, .streak-msg').forEach(function(el){
+      el.style.color = '';
     });
     document.querySelectorAll('.hero-hl').forEach(function(el){
       el.style.color = '';
