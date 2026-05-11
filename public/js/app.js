@@ -359,8 +359,9 @@ function applyDarkMode(dark) {
     document.body.style.background = '#111827';
     document.body.style.color = '#e5e7eb';
     // Fix hero band and header which use --ink as background
-    document.querySelectorAll('.hero-band, header').forEach(function(el){
+    document.querySelectorAll('.hero-band, header, .streak-card').forEach(function(el){
       el.style.background = '#0a0f1e';
+      el.style.border = '1px solid #374151';
     });
     document.querySelectorAll('.hero-hl').forEach(function(el){
       el.style.color = '#f9fafb';
@@ -380,8 +381,9 @@ function applyDarkMode(dark) {
   } else {
     document.body.style.background = '';
     document.body.style.color = '';
-    document.querySelectorAll('.hero-band, header').forEach(function(el){
+    document.querySelectorAll('.hero-band, header, .streak-card').forEach(function(el){
       el.style.background = '';
+      el.style.border = '';
     });
     document.querySelectorAll('.hero-hl').forEach(function(el){
       el.style.color = '';
