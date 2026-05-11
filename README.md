@@ -1,193 +1,229 @@
 # EduStream+
 
-> A cloud-powered academic streaming platform — share **video lectures**, **illustrated notes**, and **audio recordings** in a single course.
+<div align="center">
 
-**Module:** Cloud Native Development (COM682) | **Author:** Mahfuzur Rahman Emon | **Student ID:** B00976168
+**A cloud-native multimedia learning platform built on Microsoft Azure**
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-c9711a?style=flat-square)](https://edustream-app-emon.azurewebsites.net)
+[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=flat-square&logo=github-actions)](https://github.com/emon22-ts/edustream/actions)
+[![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=flat-square&logo=node.js)](https://nodejs.org)
+[![Azure](https://img.shields.io/badge/Deployed%20on-Microsoft%20Azure-0078d4?style=flat-square&logo=microsoft-azure)](https://azure.microsoft.com)
+
+</div>
 
 ---
 
-## Multi-media support
+## About
 
-Each course can hold up to **5 media items** mixed across three types:
+EduStream+ is a full-stack cloud-native platform where educators can publish multimedia courses combining **video lectures**, **illustrated notes**, and **audio recordings** — all in a single course. Built entirely on Microsoft Azure with production-grade security and observability.
 
-| Type | Container | Max size | Formats |
-|---|---|---|---|
-| 🎬 Video | `videos` | 100 MB | mp4, webm, ogg, mov, mkv |
-| 🖼️ Image | `images` | 20 MB | jpeg, png, gif, webp, svg |
-| 🎵 Audio | `audio` | 50 MB | mp3, wav, ogg, m4a, aac |
+> *"A cloud library of knowledge, delivered on demand."*
 
-The frontend renders each type appropriately:
-- **Video** — embedded HTML5 player with multi-video tabs
-- **Image** — gallery grid with click-to-zoom lightbox
-- **Audio** — native audio controls with file labels
+---
+
+## Features
+
+### Learning Platform
+- Multi-media courses — video, images, and audio together in one course
+- Course library — browse, search, filter by category and media type
+- Explore page — grid view with sorting
+- Course detail pages with custom video player
+- Star ratings system
+- Comments and discussion with content moderation
+- Enroll system with progress tracking
+- Course collections — group courses into learning paths
+
+### Advanced Video Player
+- Custom controls (play/pause, seek, volume)
+- Playback speed control (0.5× to 2×)
+- Keyboard shortcuts (Space=pause, →=+10s, ←=-10s)
+- Auto-saves position — resumes where you left off
+- Fullscreen support
+
+### User Experience
+- Profile pages — public profile with bio, stats, courses
+- Personal dashboard — stats, leaderboard rank, activity timeline
+- Live Rooms — real-time study rooms with text chat
+- Notifications bell with activity feed
+- Dark mode toggle
+- Mobile responsive
+
+### Cloud Architecture
+- Direct-to-blob uploads — files go straight to Azure Blob Storage (supports 1GB+ videos, no timeout)
+- SAS token generation — secure temporary upload URLs
+- Content moderation — two-tier pipeline (Azure AI Content Safety + local fallback)
+- Session authentication — secure login/register
+- User accounts stored in Azure Table Storage
 
 ---
 
 ## Architecture
 
-EduStream+ is a cloud-native multimedia learning platform built on Microsoft Azure.
-
-### Azure resources
-
-| Service | Purpose | Tier |
-|---|---|---|
-| App Service (Linux, Node 20) | Hosts the Express API and SPA frontend | Free F1 |
-| Azure Table Storage (NoSQL) | Stores courses, comments, enrollments | Pay-per-request |
-| Azure Blob Storage (3 containers) | Stores videos, images, audio | Standard LRS |
-| Azure CDN | Globally caches media delivery | Standard Microsoft |
-| Key Vault | Stores secrets via Managed Identity | Standard |
-| Application Insights | Telemetry, distributed tracing, dashboards | Pay-as-you-go |
-| Microsoft Entra ID | User authentication for write operations | Free |
-| Azure AI Content Safety | Screens uploads (with word-list fallback) | Free F0 / fallback |
-| GitHub Actions | CI/CD pipeline | — |
-
-### Why Table Storage instead of Cosmos DB
-
-Both are Azure NoSQL services. **Table Storage** was chosen for this implementation because:
-
-1. **Cost-efficient** — pay-per-request billing (~£0.04/GB/month) with no minimum throughput, ideal for a coursework deployment with bursty traffic.
-2. **Universal availability** — works on every Azure subscription including student/free tiers, where Cosmos DB has regional restrictions.
-3. **Simpler credential model** — shares the same connection string as Blob Storage, reducing the Key Vault secret count and simplifying Managed Identity wiring.
-4. **Sufficient for this domain model** — partition-key/row-key schema fits courses (PK=`course`, RK=courseId), comments (PK=courseId for query locality), and enrollments (PK=userId).
-
-Migrating to Cosmos DB would be a phase-2 step if global distribution, geo-redundancy, or richer query patterns become necessary. The application's data layer is abstracted behind a `Courses`/`Comments`/`Enrollments` interface so this swap requires no route changes.
-
-### Data flow
-
 ```
-[User] → [CDN] → [App Service: Express + SPA]
-                       ↓             ↓
-                  [Key Vault]   [App Insights]
-                       ↓
-        ┌──────────────┼─────────────────┐
-   [Table Storage]  [Blob Storage]   [Content Safety]
-   ├─ courses        ├─ videos/      (or word-list
-   ├─ comments       ├─ images/       fallback)
-   └─ enrollments    └─ audio/
+[Browser]
+    │
+    ├── API requests ──► [Azure App Service: Node.js + Express]
+    │                         │
+    │                         ├── [Azure Table Storage]
+    │                         │   ├── courses
+    │                         │   ├── comments
+    │                         │   ├── enrollments
+    │                         │   └── users
+    │                         │
+    │                         ├── [Azure Key Vault]
+    │                         │   └── Managed Identity → no plaintext secrets
+    │                         │
+    │                         └── [Application Insights]
+    │                             └── Custom KQL dashboard
+    │
+    └── Direct uploads ──► [Azure Blob Storage]
+                               ├── /videos  (1GB limit)
+                               ├── /images  (100MB limit)
+                               └── /audio   (200MB limit)
 ```
-
-The App Service uses Managed Identity to authenticate to Key Vault, eliminating connection strings from environment variables in production.
 
 ---
 
-## REST API
+## Tech Stack
 
-| Method | Endpoint | Auth | Purpose |
-|---|---|---|---|
-| GET | `/api/health` | — | Health check |
-| GET | `/api/media-types` | — | List supported media types and limits |
-| GET | `/api/courses` | — | List (`?search=`, `?category=`, `?mediaType=`) |
-| GET | `/api/courses/:id` | — | Get one course |
-| POST | `/api/courses` | required | Create course (multipart, up to 5 mixed media) |
-| PUT | `/api/courses/:id` | required | Update course metadata |
-| POST | `/api/courses/:id/media` | required | Add media to existing course |
-| DELETE | `/api/courses/:id/media/:blobName` | required | Remove a single media item |
-| DELETE | `/api/courses/:id` | required | Delete course (cascades to all media) |
-| GET | `/api/courses/:id/comments` | — | List comments |
-| POST | `/api/courses/:id/comments` | required | Add comment (moderated) |
-| DELETE | `/api/comments/:id` | required | Delete comment |
-| POST | `/api/courses/:id/enroll` | required | Enroll current user |
-| GET | `/api/users/me/enrollments` | required | Current user's enrollments |
-| GET | `/api/auth/status` | — | Check auth configuration |
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js 22 LTS |
+| Framework | Express.js |
+| Frontend | Vanilla JS SPA (custom router, no framework) |
+| Database | Azure Table Storage (NoSQL) |
+| File Storage | Azure Blob Storage |
+| Secrets | Azure Key Vault + Managed Identity |
+| Monitoring | Azure Application Insights |
+| CI/CD | GitHub Actions |
+| Hosting | Azure App Service (Linux) |
+| Security | Helmet.js, rate limiting, content moderation |
 
 ---
 
-## Local development
+## Azure Services
+
+| Service | Purpose |
+|---|---|
+| App Service | Hosts Node.js API and SPA frontend |
+| Table Storage | NoSQL database for all entities |
+| Blob Storage | Video, image, audio file storage |
+| Key Vault | Secrets via Managed Identity |
+| Application Insights | Telemetry and custom dashboards |
+| GitHub Actions | Automated CI/CD pipeline |
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 22+
+- Azure CLI
+- Azure subscription
+
+### Local Development
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/edustream.git
+git clone https://github.com/emon22-ts/edustream.git
 cd edustream
 npm install
 cp .env.example .env
-# Edit .env with your Azure storage connection string
+# Add STORAGE_CONNECTION_STRING to .env
 npm start
 ```
 
 Open http://localhost:3000
 
----
+### Azure Deployment
 
-## Frontend design
-
-The interface uses an **editorial / academic** aesthetic — distinct from the standard SaaS dashboard look:
-
-- **Type pairing:** Fraunces (display serif) + Geist (geometric sans) + Geist Mono (technical labels)
-- **Palette:** deep navy (#0e1a2b), warm cream (#f4ecdc), amber accent (#c9711a), burgundy alerts (#8a2433)
-- **Layout:** newspaper-style nameplate header, hero with editorial pull-quote, two-column library + upload panel
-- **Touches:** italic by-lines, dashed dividers, subtle paper-grain background, fade-up animation on course entries
+```bash
+chmod +x scripts/setup-azure.sh
+./scripts/setup-azure.sh
+git push origin main  # CI/CD deploys automatically
+```
 
 ---
 
-## Content moderation strategy
+## Security
 
-Two-tier moderation pipeline:
-1. **Cloud tier** — Azure AI Content Safety analyses text against four severity levels across Hate, SelfHarm, Sexual, and Violence categories
-2. **Fallback tier** — local word-list moderation for environments where Content Safety isn't available (e.g. student subscriptions with Cognitive Services restrictions)
-
-The moderator service automatically falls through from cloud to fallback. This graceful degradation pattern is itself an example of cloud-native resilience — the application stays functional even when an external dependency is unavailable.
-
----
-
-## Security posture
-
-- All secrets stored in Key Vault (no plaintext in environment variables in production)
-- Managed Identity used for App Service → Key Vault authentication
-- HTTPS-only on App Service
-- Helmet middleware for security headers (CSP, HSTS, X-Frame-Options)
-- Rate limiting on write operations (30/min per IP)
-- JWT validation via JWKS for Entra ID tokens
-- MIME validation on every upload
-- Content moderation on all user-supplied text
-- CORS configured
+- No plaintext secrets — all credentials in Azure Key Vault
+- Managed Identity — passwordless authentication to Key Vault
+- Content moderation — screens all user-submitted text
+- Rate limiting — 30 write requests/min per IP
+- Security headers — Helmet.js middleware
+- Password hashing before storage
+- SAS tokens — 2-hour expiry, scoped to single upload
 
 ---
 
-## Observability
+## Project Structure
 
-Custom telemetry events tracked in App Insights:
-- `CourseCreated` (with mediaCount, mediaTypes)
-- `CourseViewed`, `CourseUpdated`, `CourseDeleted`
-- `MediaAdded`, `MediaRemoved`
-- `CommentPosted`
-- `UserEnrolled`
-- `ContentModerationBlocked` (with provider tier and category)
-- `ApiError`
-
-Custom metrics:
-- `ApiRequestDuration` (per route, per status)
-- `MediaUploadDuration` (with file count and total size dimensions)
-
----
-
-## CW1 design → CW2 implementation mapping
-
-| CW1 design element | CW2 implementation |
-|---|---|
-| Azure Functions per CRUD operation | Express routes on App Service (consolidated for phase 1) |
-| API Management gateway | Express middleware (CORS, rate limit, auth, helmet) |
-| Cosmos DB | **Table Storage** (cost-effective NoSQL for student deployment) |
-| Azure SQL DB | Folded into Table Storage for phase 1 |
-| Blob Storage (video only) | ✅ **Extended to three media types** |
-| Azure CDN | ✅ Implemented |
-| Static Web App frontend | Served from same App Service |
-| App Insights + Power BI | ✅ App Insights with custom dashboards |
-| Content Moderator | ✅ AI Content Safety + word-list fallback |
-| Azure AI Search | Future work (phase 2) |
-| Azure AD authentication | ✅ Microsoft Entra ID with MSAL.js |
-| Key Vault for secrets | ✅ Implemented with Managed Identity |
-
-The implementation goes **beyond** the CW1 design in three ways:
-1. **Multi-media:** original design covered video only; CW2 adds image + audio
-2. **Production security:** Key Vault + Managed Identity weren't in CW1 but are essential
-3. **Resilient moderation:** two-tier strategy with graceful fallback
+```
+edustream/
+├── src/
+│   ├── server.js           # Entry point
+│   ├── routes.js           # REST API endpoints
+│   ├── config.js           # Key Vault config loader
+│   ├── middleware/auth.js   # Session auth
+│   └── services/
+│       ├── tablestorage.js  # Azure Table Storage
+│       ├── storage.js       # Azure Blob Storage
+│       ├── sas.js           # SAS token generation
+│       ├── moderator.js     # Content moderation
+│       └── telemetry.js     # App Insights
+├── public/
+│   ├── index.html           # SPA shell
+│   ├── css/main.css         # Design system
+│   ├── js/app.js            # Router + shared utilities
+│   └── pages/
+│       ├── home.js
+│       ├── explore.js
+│       ├── course.js
+│       ├── dashboard.js
+│       ├── profile.js
+│       ├── collections.js
+│       └── liverooms.js
+└── scripts/setup-azure.sh   # Azure provisioning
+```
 
 ---
 
-## Future work (phase 2)
+## REST API
 
-- Migrate from Table Storage to Cosmos DB for global distribution
-- Decompose into Azure Functions per CRUD operation behind API Management
-- Add Azure AI Search for semantic course discovery
-- Power BI dashboards on App Insights data
-- Image thumbnail generation via Azure Functions
-- Audio transcription via Azure AI Speech for searchable lectures
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/courses` | List courses |
+| POST | `/api/courses` | Create course |
+| GET | `/api/courses/:id` | Get course |
+| PUT | `/api/courses/:id` | Update course |
+| DELETE | `/api/courses/:id` | Delete course |
+| GET | `/api/courses/:id/comments` | List comments |
+| POST | `/api/courses/:id/comments` | Post comment |
+| POST | `/api/courses/:id/enroll` | Enroll |
+| POST | `/api/upload/sas` | Get upload SAS token |
+| POST | `/api/upload/confirm` | Confirm direct upload |
+| POST | `/api/auth/register` | Register |
+| POST | `/api/auth/login` | Login |
+
+---
+
+## Design
+
+Editorial academic aesthetic:
+- **Type:** Fraunces (serif) + Geist (sans)
+- **Colours:** Navy `#0e1a2b` · Cream `#f5edd8` · Amber `#c9711a`
+- **Modes:** Light and dark theme
+- **Layout:** Responsive, sidebar collapses on mobile
+
+---
+
+## Author
+
+**Mahfuzur Rahman Emon**  
+[github.com/emon22-ts](https://github.com/emon22-ts)
+
+---
+
+## License
+
+MIT
