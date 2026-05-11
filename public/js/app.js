@@ -257,7 +257,9 @@ function renderMediaViewer(c) {
 }
 
 function renderMediaItems(courseId, type, items) {
-  if (type === 'video') return items.map(function(m,i){ return '<div style="' + (i>0?'display:none':'') + '"><video controls preload="metadata" src="' + (m.cdnUrl||m.directUrl) + '" style="width:100%;display:block;background:black;max-height:400px"></video></div>'; }).join('');
+  if (type === 'video') return items.map(function(m,i){
+    return '<div style="' + (i>0?'display:none':'') + '">' + createAdvancedPlayer(m.cdnUrl||m.directUrl, courseId, i) + '</div>';
+  }).join('');
   if (type === 'audio') return items.map(function(m){ return '<div><div style="padding:10px 14px 0;color:var(--paper);font-size:12px;font-family:var(--mono)">🎵 ' + escapeHtml(m.originalName||'Audio') + '</div><audio controls preload="metadata" src="' + (m.cdnUrl||m.directUrl) + '" style="width:calc(100% - 28px);margin:10px 14px;display:block"></audio></div>'; }).join('');
   if (type === 'image') return '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:4px;padding:4px">' + items.map(function(m){ return '<img src="' + (m.cdnUrl||m.directUrl) + '" alt="' + escapeHtml(m.originalName||'') + '" onclick="openLightbox(\'' + (m.cdnUrl||m.directUrl) + '\')" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:3px;cursor:pointer">'; }).join('') + '</div>';
   return '';
@@ -333,6 +335,7 @@ async function addComment(courseId, inputEl) {
     inputEl.value = '';
     loadComments(courseId);
     toast('Comment posted', 'success');
+    addNotification(currentAccount.name + ' commented on a course', 'comment', 'course/' + courseId);
   } catch(e) { toast(e.message, 'error'); }
 }
 
@@ -358,22 +361,6 @@ function applyDarkMode(dark) {
     // Dark mode — body and content go dark, header stays dark (it already is)
     document.body.style.background = '#111827';
     document.body.style.color = '#e5e7eb';
-    // Fix hero band and header which use --ink as background
-    document.querySelectorAll('.hero-band, header, .streak-card').forEach(function(el){
-      el.style.background = '#0a0f1e';
-      el.style.border = '1px solid #374151';
-    });
-    document.querySelectorAll('.streak-title, .streak-sub, .streak-msg').forEach(function(el){
-      el.style.color = '#f9fafb';
-    });
-    document.querySelectorAll('select, input, textarea').forEach(function(el){
-      el.style.color = '#f9fafb';
-      el.style.background = '#1f2937';
-      el.style.borderColor = '#374151';
-    });
-    document.querySelectorAll('.hero-hl').forEach(function(el){
-      el.style.color = '#f9fafb';
-    });
     document.documentElement.style.setProperty('--paper', '#1f2937');
     document.documentElement.style.setProperty('--paper-tint', '#111827');
     document.documentElement.style.setProperty('--paper-deep', '#0f172a');
@@ -389,21 +376,6 @@ function applyDarkMode(dark) {
   } else {
     document.body.style.background = '';
     document.body.style.color = '';
-    document.querySelectorAll('.hero-band, header, .streak-card').forEach(function(el){
-      el.style.background = '';
-      el.style.border = '';
-    });
-    document.querySelectorAll('.streak-title, .streak-sub, .streak-msg').forEach(function(el){
-      el.style.color = '';
-    });
-    document.querySelectorAll('select, input, textarea').forEach(function(el){
-      el.style.color = '';
-      el.style.background = '';
-      el.style.borderColor = '';
-    });
-    document.querySelectorAll('.hero-hl').forEach(function(el){
-      el.style.color = '';
-    });
     document.documentElement.style.setProperty('--paper', '#f5edd8');
     document.documentElement.style.setProperty('--paper-tint', '#ede4ce');
     document.documentElement.style.setProperty('--paper-deep', '#e4d9be');
@@ -496,4 +468,151 @@ function updateProgress(courseId, pct) {
   var el = document.querySelector('#course-' + courseId + ' .progress-wrap');
   if (el) el.outerHTML = '<div class="progress-wrap">' + renderProgressBar(courseId) + '</div>';
   toast('Progress updated to ' + pct + '%', 'success');
+}
+
+// ── ADVANCED VIDEO PLAYER ──
+function createAdvancedPlayer(videoUrl, courseId, mediaIndex) {
+  var savedTime = parseFloat(localStorage.getItem('vp_' + courseId + '_' + mediaIndex) || '0');
+  return `<div class="adv-player" id="player-${courseId}-${mediaIndex}" style="position:relative;background:#000;border-radius:var(--radius);overflow:hidden">
+    <video id="vid-${courseId}-${mediaIndex}" src="${videoUrl}" style="width:100%;display:block;max-height:420px" preload="metadata"
+      ontimeupdate="vpProgress('${courseId}','${mediaIndex}')"
+      onloadedmetadata="this.currentTime=${savedTime}">
+    </video>
+    <!-- Custom controls -->
+    <div class="vp-controls" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.85));padding:8px 12px">
+      <!-- Progress bar -->
+      <div onclick="vpSeek(event,this,'${courseId}','${mediaIndex}')" style="height:4px;background:rgba(255,255,255,0.3);border-radius:2px;cursor:pointer;margin-bottom:8px;position:relative">
+        <div id="vp-bar-${courseId}-${mediaIndex}" style="height:100%;background:var(--amber);border-radius:2px;width:0%;transition:width 0.5s linear;pointer-events:none"></div>
+      </div>
+      <!-- Buttons row -->
+      <div style="display:flex;align-items:center;gap:10px">
+        <button onclick="vpToggle('${courseId}','${mediaIndex}')" id="vp-btn-${courseId}-${mediaIndex}" style="background:transparent;border:none;color:white;font-size:18px;cursor:pointer;padding:2px 6px">▶</button>
+        <span id="vp-time-${courseId}-${mediaIndex}" style="color:rgba(255,255,255,0.7);font-size:11px;font-family:var(--mono)">0:00 / 0:00</span>
+        <div style="flex:1"></div>
+        <!-- Speed control -->
+        <select onchange="vpSpeed('${courseId}','${mediaIndex}',this.value)" style="background:rgba(0,0,0,0.6);color:white;border:1px solid rgba(255,255,255,0.3);border-radius:3px;padding:2px 6px;font-size:11px;cursor:pointer">
+          <option value="0.5">0.5×</option>
+          <option value="0.75">0.75×</option>
+          <option value="1" selected>1×</option>
+          <option value="1.25">1.25×</option>
+          <option value="1.5">1.5×</option>
+          <option value="2">2×</option>
+        </select>
+        <!-- Fullscreen -->
+        <button onclick="vpFullscreen('${courseId}','${mediaIndex}')" style="background:transparent;border:none;color:white;font-size:14px;cursor:pointer;padding:2px 6px">⛶</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function vpToggle(cId, mIdx) {
+  var vid = document.getElementById('vid-'+cId+'-'+mIdx);
+  var btn = document.getElementById('vp-btn-'+cId+'-'+mIdx);
+  if (!vid) return;
+  if (vid.paused) { vid.play(); btn.textContent = '⏸'; }
+  else { vid.pause(); btn.textContent = '▶'; }
+}
+
+function vpProgress(cId, mIdx) {
+  var vid = document.getElementById('vid-'+cId+'-'+mIdx);
+  if (!vid || !vid.duration) return;
+  var pct = (vid.currentTime / vid.duration) * 100;
+  var bar = document.getElementById('vp-bar-'+cId+'-'+mIdx);
+  if (bar) bar.style.width = pct + '%';
+  var timeEl = document.getElementById('vp-time-'+cId+'-'+mIdx);
+  if (timeEl) timeEl.textContent = vpFmt(vid.currentTime) + ' / ' + vpFmt(vid.duration);
+  // Save position every 5 seconds
+  if (Math.floor(vid.currentTime) % 5 === 0) {
+    localStorage.setItem('vp_'+cId+'_'+mIdx, vid.currentTime);
+    // Update progress
+    var watchedPct = Math.round(pct);
+    if (watchedPct > getProgress(cId)) setProgress(cId, watchedPct);
+  }
+}
+
+function vpSeek(e, el, cId, mIdx) {
+  var vid = document.getElementById('vid-'+cId+'-'+mIdx);
+  if (!vid || !vid.duration) return;
+  var rect = el.getBoundingClientRect();
+  var pct = (e.clientX - rect.left) / rect.width;
+  vid.currentTime = pct * vid.duration;
+}
+
+function vpSpeed(cId, mIdx, speed) {
+  var vid = document.getElementById('vid-'+cId+'-'+mIdx);
+  if (vid) vid.playbackRate = parseFloat(speed);
+}
+
+function vpFullscreen(cId, mIdx) {
+  var player = document.getElementById('player-'+cId+'-'+mIdx);
+  if (player) {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else player.requestFullscreen();
+  }
+}
+
+function vpFmt(s) {
+  var m = Math.floor(s/60), sec = Math.floor(s%60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// Add keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  var vids = document.querySelectorAll('video');
+  if (!vids.length) return;
+  var vid = vids[0];
+  if (e.code === 'Space') { e.preventDefault(); vid.paused ? vid.play() : vid.pause(); }
+  else if (e.code === 'ArrowRight') { e.preventDefault(); vid.currentTime += 10; }
+  else if (e.code === 'ArrowLeft') { e.preventDefault(); vid.currentTime -= 10; }
+  else if (e.code === 'ArrowUp') { e.preventDefault(); vid.volume = Math.min(1, vid.volume + 0.1); }
+  else if (e.code === 'ArrowDown') { e.preventDefault(); vid.volume = Math.max(0, vid.volume - 0.1); }
+});
+
+// ── NOTIFICATIONS ──
+var notifications = JSON.parse(localStorage.getItem('edustream_notifs') || '[]');
+
+function addNotification(msg, type, link) {
+  notifications.unshift({ id: Date.now(), msg, type: type||'info', link, read: false, time: new Date().toISOString() });
+  if (notifications.length > 50) notifications = notifications.slice(0, 50);
+  localStorage.setItem('edustream_notifs', JSON.stringify(notifications));
+  updateNotifBadge();
+}
+
+function updateNotifBadge() {
+  var unread = notifications.filter(function(n){ return !n.read; }).length;
+  var badge = document.getElementById('notifBadge');
+  if (badge) {
+    badge.textContent = unread > 9 ? '9+' : unread;
+    badge.style.display = unread > 0 ? 'flex' : 'none';
+  }
+}
+
+function toggleNotifications() {
+  var panel = document.getElementById('notifPanel');
+  if (!panel) return;
+  var isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) {
+    // Mark all as read
+    notifications.forEach(function(n){ n.read = true; });
+    localStorage.setItem('edustream_notifs', JSON.stringify(notifications));
+    updateNotifBadge();
+    renderNotifPanel();
+  }
+}
+
+function renderNotifPanel() {
+  var list = document.getElementById('notifList');
+  if (!list) return;
+  if (!notifications.length) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--ink-muted);font-style:italic;font-family:var(--serif)">No notifications yet</div>';
+    return;
+  }
+  list.innerHTML = notifications.slice(0,20).map(function(n) {
+    return '<div onclick="' + (n.link ? 'navigate(\''+n.link+'\');toggleNotifications()' : '') + '" style="padding:12px 16px;border-bottom:1px solid var(--rule);cursor:'+(n.link?'pointer':'default')+';background:'+(n.read?'transparent':'var(--amber-pale)')+';transition:background 0.15s" onmouseover="this.style.background=\'var(--paper-tint)\'" onmouseout="this.style.background=\''+(n.read?'transparent':'var(--amber-pale)')+'\'">'+
+      '<div style="font-size:13px;color:var(--ink);margin-bottom:3px">' + escapeHtml(n.msg) + '</div>'+
+      '<div style="font-size:11px;color:var(--ink-muted)">' + formatRelative(n.time) + '</div>'+
+    '</div>';
+  }).join('');
 }

@@ -47,14 +47,14 @@
 .streak-card{background:var(--ink);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
 .streak-top{display:flex;align-items:flex-end;gap:12px;margin-bottom:14px}
 .streak-num{font-family:var(--serif);font-size:52px;font-weight:500;color:var(--amber);line-height:1}
-.streak-title{font-size:14px;font-weight:500;color:#f5edd8;margin-bottom:3px}
-.streak-sub{font-size:11px;color:rgba(244,236,220,0.75);font-style:italic;font-family:var(--serif)}
+.streak-title{font-size:14px;font-weight:500;color:var(--paper);margin-bottom:3px}
+.streak-sub{font-size:11px;color:rgba(244,236,220,0.4);font-style:italic;font-family:var(--serif)}
 .streak-days{display:flex;gap:5px;margin-bottom:10px}
 .s-day{flex:1;aspect-ratio:1;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600}
 .s-day.done{background:var(--amber);color:white}
 .s-day.today{background:rgba(201,113,26,0.25);color:var(--amber);border:1px solid rgba(201,113,26,0.5)}
 .s-day.off{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.2)}
-.streak-msg{font-size:11px;color:rgba(244,236,220,0.75);font-style:italic;font-family:var(--serif)}
+.streak-msg{font-size:11px;color:rgba(244,236,220,0.35);font-style:italic;font-family:var(--serif)}
 .filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--paper-tint);border:1px solid var(--rule);border-radius:var(--radius-lg);padding:10px 14px;margin-bottom:20px;box-shadow:var(--shadow)}
 .filter-bar input[type=search]{flex:1;min-width:180px;padding:7px 11px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px;color:var(--ink)}
 .filter-bar select{padding:7px 11px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px}
@@ -194,6 +194,7 @@
       <button class='nav-link' data-page='dashboard' onclick='navigate("dashboard")'>📊 Dashboard</button>
       <button class='nav-link' data-page='liverooms' onclick='navigate("liverooms")'>🎙 Live Rooms</button>
       <button class='nav-link' data-page='profile' onclick='navigate("profile")'>👤 Profile</button>
+      <button class='nav-link' data-page='collections' onclick='navigate("collections")'>📁 Collections</button>
     </nav>
     <div class='header-right'>
       <div class='user-pill' id='userPill'>
@@ -202,6 +203,20 @@
       </div>
       <button class='btn-ghost-hd' id='signInBtn' onclick='showLoginModal()'>Sign in</button>
       <button class='btn-ghost-hd' id='signOutBtn' onclick='signOut()' style='display:none'>Sign out</button>
+      <!-- NOTIFICATIONS -->
+      <div style='position:relative'>
+        <button onclick='toggleNotifications()' style='background:transparent;border:1px solid rgba(244,236,220,0.25);color:rgba(244,236,220,0.7);padding:7px 10px;border-radius:5px;font-size:16px;cursor:pointer;position:relative'>
+          🔔
+          <span id='notifBadge' style='display:none;position:absolute;top:-5px;right:-5px;background:var(--burgundy);color:white;font-size:10px;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;font-family:var(--mono)'>0</span>
+        </button>
+        <div id='notifPanel' style='display:none;position:absolute;right:0;top:44px;width:320px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius-lg);box-shadow:var(--shadow-lift);z-index:200;overflow:hidden'>
+          <div style='padding:12px 16px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center'>
+            <span style='font-weight:600;font-size:14px;color:var(--ink)'>Notifications</span>
+            <button onclick='notifications=[];localStorage.setItem("edustream_notifs","[]");renderNotifPanel();updateNotifBadge()' style='background:transparent;border:none;font-size:11px;color:var(--ink-muted);cursor:pointer;font-family:var(--sans)'>Clear all</button>
+          </div>
+          <div id='notifList' style='max-height:360px;overflow-y:auto'></div>
+        </div>
+      </div>
       <button id='darkToggle' onclick='toggleDarkMode()' title='Toggle dark mode' style='background:transparent;border:1px solid rgba(244,236,220,0.25);color:rgba(244,236,220,0.7);padding:7px 10px;border-radius:5px;font-size:14px;cursor:pointer;transition:all 0.15s'>🌙</button>
       <button class='hamburger' onclick='toggleMobileNav()'>☰</button>
     </div>
@@ -220,9 +235,11 @@
 <script src='/pages/dashboard.js'></script>
 <script src='/pages/liverooms.js'></script>
 <script src='/pages/profile.js'></script>
+<script src='/pages/collections.js'></script>
 <script>
 initDarkMode();
 initAuth();
+updateNotifBadge();
 var path = window.location.pathname;
 var initialPage = 'home', initialParams = {};
 if (path.startsWith('/explore')) initialPage = 'explore';
@@ -230,6 +247,7 @@ else if (path.startsWith('/dashboard')) initialPage = 'dashboard';
 else if (path.startsWith('/liverooms')) initialPage = 'liverooms';
 else if (path.startsWith('/course/')) { initialPage = 'course'; initialParams = { id: path.split('/course/')[1] }; }
 else if (path.startsWith('/profile/')) { initialPage = 'profile'; initialParams = { username: path.split('/profile/')[1] }; }
+else if (path.startsWith('/collections')) { initialPage = 'collections'; }
 navigate(initialPage, initialParams, false);
 </script>
 </body>
