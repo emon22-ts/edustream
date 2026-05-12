@@ -142,7 +142,7 @@
 <div id='authModal'>
   <div class='auth-box'>
     <div class='auth-tabs'>
-      <button class='auth-tab active' data-tab='login' onclick='switchAuthTab(login)'>Sign In</button>
+      <button class='auth-tab active' data-tab='login' onclick='switchAuthTab("login")'>Sign In</button>
       <button class='auth-tab' data-tab='register' onclick='switchAuthTab("register")'>Register</button>
     </div>
     <div class='auth-body'>
@@ -163,7 +163,7 @@
         <div class='auth-field'><label>Confirm Password</label><input type='password' id='regConfirm' placeholder='Repeat password' onkeypress='if(event.key===Enter)submitRegister()'></div>
         <button class='auth-btn' onclick='submitRegister()'>Create Account</button>
         <button class='auth-cancel' onclick='hideAuthModal()'>Cancel</button>
-        <div style='text-align:center;margin-top:12px;font-size:13px;color:var(--ink-muted)'>Already have an account? <span onclick='switchAuthTab(login)' style='color:var(--amber);cursor:pointer;font-weight:500'>Sign in</span></div>
+        <div style='text-align:center;margin-top:12px;font-size:13px;color:var(--ink-muted)'>Already have an account? <span onclick='switchAuthTab("login")' style='color:var(--amber);cursor:pointer;font-weight:500'>Sign in</span></div>
       </div>
     </div>
   </div>
