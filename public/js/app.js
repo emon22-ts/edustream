@@ -431,3 +431,6 @@ function getProgress(courseId) {
     });
   });
 })();
+
+function initAuth() { /* alias - auth handled in boot */ }
+function showLoading(id) { showSkeletons(id, 4); }
