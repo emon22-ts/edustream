@@ -358,24 +358,39 @@ function initDarkMode() {
 function applyDarkMode(dark) {
   var btn = document.getElementById('darkToggle');
   if (dark) {
-    // Dark mode — body and content go dark, header stays dark (it already is)
-    document.body.style.background = '#111827';
-    document.body.style.color = '#e5e7eb';
-    document.documentElement.style.setProperty('--paper', '#1f2937');
-    document.documentElement.style.setProperty('--paper-tint', '#111827');
-    document.documentElement.style.setProperty('--paper-deep', '#0f172a');
-    document.documentElement.style.setProperty('--ink', '#f9fafb');
-    document.documentElement.style.setProperty('--ink-soft', '#d1d5db');
-    document.documentElement.style.setProperty('--ink-muted', '#9ca3af');
-    document.documentElement.style.setProperty('--rule', '#374151');
-    document.documentElement.style.setProperty('--rule-strong', '#4b5563');
+    // CSS vars — content area goes dark
+    document.documentElement.style.setProperty('--paper', '#1e2433');
+    document.documentElement.style.setProperty('--paper-tint', '#252b3b');
+    document.documentElement.style.setProperty('--paper-deep', '#1a1f2e');
+    document.documentElement.style.setProperty('--ink', '#0e1a2b');
+    document.documentElement.style.setProperty('--ink-soft', '#cbd5e1');
+    document.documentElement.style.setProperty('--ink-muted', '#94a3b8');
+    document.documentElement.style.setProperty('--rule', '#334155');
+    document.documentElement.style.setProperty('--rule-strong', '#475569');
     document.documentElement.style.setProperty('--amber-pale', '#1c1008');
     document.documentElement.style.setProperty('--burgundy', '#f87171');
-    // Keep header dark (it uses --ink as bg so it stays dark)
+    // Body
+    document.body.style.background = '#1e2433';
+    document.body.style.color = '#e2e8f0';
+    // Fix all text that uses --ink (now dark navy, wrong for dark mode)
+    document.querySelectorAll('.c-title,.c-desc,.c-by,.lib-title,.up-title,.s-label,.lb-name,.feat-title,.page-title,.page-subtitle,.empty-title,.empty-text,.comment-text,.comment-author').forEach(function(el){
+      el.style.color = '#e2e8f0';
+    });
+    // Cards
+    document.querySelectorAll('.card,.s-card,.upload-panel,.filter-bar').forEach(function(el){
+      el.style.background = '#252b3b';
+      el.style.borderColor = '#334155';
+    });
+    // Nav links
+    document.querySelectorAll('.nav-link').forEach(function(el){
+      el.style.color = 'rgba(226,232,240,0.7)';
+    });
+    document.querySelectorAll('.nav-link.active').forEach(function(el){
+      el.style.color = 'var(--amber)';
+    });
     if (btn) btn.textContent = '☀️';
   } else {
-    document.body.style.background = '';
-    document.body.style.color = '';
+    // Reset everything
     document.documentElement.style.setProperty('--paper', '#f5edd8');
     document.documentElement.style.setProperty('--paper-tint', '#ede4ce');
     document.documentElement.style.setProperty('--paper-deep', '#e4d9be');
@@ -386,8 +401,42 @@ function applyDarkMode(dark) {
     document.documentElement.style.setProperty('--rule-strong', '#b8ac94');
     document.documentElement.style.setProperty('--amber-pale', '#fdf0e0');
     document.documentElement.style.setProperty('--burgundy', '#7a1f2e');
+    document.body.style.background = '';
+    document.body.style.color = '';
+    document.querySelectorAll('.c-title,.c-desc,.c-by,.lib-title,.up-title,.s-label,.lb-name,.feat-title,.page-title,.page-subtitle,.empty-title,.empty-text,.comment-text,.comment-author').forEach(function(el){
+      el.style.color = '';
+    });
+    document.querySelectorAll('.card,.s-card,.upload-panel,.filter-bar').forEach(function(el){
+      el.style.background = '';
+      el.style.borderColor = '';
+    });
+    document.querySelectorAll('.nav-link').forEach(function(el){
+      el.style.color = '';
+    });
     if (btn) btn.textContent = '🌙';
   }
+  // Always fix these regardless of mode
+  document.querySelectorAll('.hero-band, header, .streak-card').forEach(function(el){
+    el.style.background = '#0e1a2b';
+    el.style.borderColor = 'rgba(255,255,255,0.06)';
+  });
+  document.querySelectorAll('.hero-hl').forEach(function(el){
+    el.style.color = '#f5edd8';
+  });
+  document.querySelectorAll('.streak-title,.streak-sub,.streak-msg').forEach(function(el){
+    el.style.color = '#f5edd8';
+  });
+  document.querySelectorAll('select,input,textarea').forEach(function(el){
+    if (dark) {
+      el.style.color = '#e2e8f0';
+      el.style.background = '#1a1f2e';
+      el.style.borderColor = '#334155';
+    } else {
+      el.style.color = '';
+      el.style.background = '';
+      el.style.borderColor = '';
+    }
+  });
 }
 
 function toggleDarkMode() {
