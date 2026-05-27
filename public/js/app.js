@@ -439,3 +439,12 @@ function updateNotifBadge() {}
 function hideLoading(id) { var el = document.getElementById(id); if (el) el.innerHTML = ''; }
 var apiGet = fetch;
 function apiGet(url) { return fetch(url).then(function(r){ return r.json(); }); }
+
+// Fix API response helper
+function parseCourses(data) {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.courses)) return data.courses;
+  if (data && Array.isArray(data.items)) return data.items;
+  if (data && Array.isArray(data.value)) return data.value;
+  return [];
+}
