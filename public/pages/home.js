@@ -291,6 +291,7 @@ registerPage('home', async function(container) {
 });
 
 async function loadSidebarData(courses) {
+  if (!Array.isArray(courses)) courses = [];
   if (!courses) { try { courses = await apiGet('/courses'); } catch(e) { return; } }
   const recent = [...courses].sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)).slice(0,3);
   const featEl = document.getElementById('featuredList');
