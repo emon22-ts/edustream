@@ -79,7 +79,7 @@ registerPage('admin', async function(container) {
                   <td style="padding:10px 14px;font-weight:500">${escapeHtml(u.name)}</td>
                   <td style="padding:10px 14px;color:var(--ink-muted);font-family:var(--mono);font-size:11px">${escapeHtml(u.email)}</td>
                   <td style="padding:10px 14px"><span style="background:${u.role==='admin'?'var(--burgundy)':u.role==='moderator'?'var(--amber)':'var(--ink)'};color:white;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase">${u.role||'user'}</span></td>
-                  <td style="padding:10px 14px"><span style="color:${u.isBanned?'var(--burgundy)':'var(--moss)';font-weight:600">${u.isBanned?'🚫 Banned':'✅ Active'}</span></td>
+                  <td style="padding:10px 14px"><span style="color:${u.isBanned?'var(--burgundy)':'var(--moss)'};font-weight:600">${u.isBanned?'🚫 Banned':'✅ Active'}</span></td>
                   <td style="padding:10px 14px;color:var(--ink-muted);font-size:11px">${formatDate(u.createdAt)}</td>
                   <td style="padding:10px 14px">
                     <div style="display:flex;gap:6px;flex-wrap:wrap">
