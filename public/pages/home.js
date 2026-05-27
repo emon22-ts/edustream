@@ -1,9 +1,7 @@
-// pages/home.js
-// Home page — hero band, upload panel, course library, sidebar
+// pages/home.js - Home page with skeletons, autocomplete, image previews
 
 registerPage('home', async function(container) {
   container.innerHTML = `
-    <!-- HERO BAND -->
     <div class="hero-band">
       <div class="hero-inner">
         <div class="hero-hl">
@@ -18,7 +16,6 @@ registerPage('home', async function(container) {
       </div>
     </div>
 
-    <!-- MAIN -->
     <div class="home-main">
       <!-- SIDEBAR -->
       <aside class="sidebar" id="homeSidebar">
@@ -28,17 +25,14 @@ registerPage('home', async function(container) {
           <div class="s-row" onclick="navigate('dashboard',{tab:'enrolled'})"><div class="s-icon">🔖</div><span class="s-label">Enrolled</span><span class="s-badge" id="sideEnrolledCount">—</span></div>
           <div class="s-row" onclick="navigate('explore')"><div class="s-icon">🧭</div><span class="s-label">Explore All</span></div>
         </div>
-
         <div class="s-card">
           <div class="s-head"><span class="s-head-title">Featured this week</span></div>
           <div id="featuredList"><div class="feat-item"><div class="feat-title" style="color:var(--ink-muted);font-style:italic">Loading...</div></div></div>
         </div>
-
         <div class="s-card">
           <div class="s-head"><span class="s-head-title">Leaderboard</span></div>
           <div id="leaderboardList"><div class="lb-row"><span class="lb-name" style="color:var(--ink-muted);font-style:italic">Loading...</span></div></div>
         </div>
-
         <div class="streak-card">
           <div class="streak-top">
             <div class="streak-num" id="streakNumber">—</div>
@@ -56,8 +50,11 @@ registerPage('home', async function(container) {
       <div class="home-content">
         <!-- FILTER BAR -->
         <div class="filter-bar">
-          <input type="search" id="searchInput" placeholder="Search title or description..." oninput="homeDebounceSearch()">
-          <select id="categoryFilter" onchange="homeLoadCourses()">
+          <div class="search-wrap" style="flex:1;min-width:180px;position:relative">
+            <input type="search" id="searchInput" placeholder="Search title or description..." oninput="homeDebounceSearch()" style="width:100%;padding:7px 11px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px;color:var(--ink)">
+            <div id="acDropdown" class="autocomplete-dropdown" style="display:none"></div>
+          </div>
+          <select id="categoryFilter" onchange="homeLoadCourses()" style="padding:7px 11px;background:var(--paper);border:1px solid var(--rule);border-radius:var(--radius);font-family:var(--sans);font-size:13px">
             <option value="">All categories</option>
             <option>General</option><option>Technology</option><option>Business</option>
             <option>Science</option><option>Arts</option><option>Humanities</option>
@@ -86,19 +83,24 @@ registerPage('home', async function(container) {
             </div>
             <div class="field"><label>Tags (comma-separated)</label><input type="text" id="upTags" placeholder="azure, cloud, serverless"></div>
             <div class="field">
-              <label>Media files</label>
+              <label>Media files (video 1GB · image 100MB · audio 200MB)</label>
               <div class="dropzone" id="upDropzone" onclick="document.getElementById('upMediaInput').click()">
                 <div class="dz-icon">📥</div>
                 <div class="dz-title">Drop files or click to browse</div>
-                <div class="dz-hint">video 1GB · image 100MB · audio 200MB · up to 5 files</div>
+                <div class="dz-hint">Up to 5 files · images show preview</div>
                 <input type="file" id="upMediaInput" multiple accept="video/*,image/*,audio/*" style="display:none">
               </div>
-              <div class="file-list" id="upFileList"></div>
+              <!-- PREVIEW AREA -->
+              <div id="upPreviewArea"></div>
             </div>
-            <div class="media-type-pills">
-              <div class="mt-pill">🎬 Video</div>
-              <div class="mt-pill">🖼 Image</div>
-              <div class="mt-pill">🎵 Audio</div>
+            <div id="upProgressWrap" style="display:none;margin-bottom:12px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-muted);margin-bottom:4px">
+                <span id="upProgressLabel">Uploading...</span>
+                <span id="upProgressPct">0%</span>
+              </div>
+              <div style="height:6px;background:var(--rule);border-radius:3px;overflow:hidden">
+                <div id="upProgressBar" style="height:100%;background:var(--amber);width:0%;transition:width 0.3s;border-radius:3px"></div>
+              </div>
             </div>
             <button class="btn btn-primary" style="width:100%;padding:11px" id="upCreateBtn" onclick="homeCreateCourse()">Publish course</button>
           </aside>
@@ -115,141 +117,141 @@ registerPage('home', async function(container) {
       </div>
     </div>`;
 
-  // Init file picker
+  // ── FILE HANDLING WITH PREVIEWS ──
   let selectedFiles = [];
   const input = document.getElementById('upMediaInput');
   const dropzone = document.getElementById('upDropzone');
 
+  function updatePreviews() {
+    renderFilePreviews(selectedFiles, 'upPreviewArea', removePreviewFile);
+  }
+
+  window.removePreviewFile = function(idx) {
+    selectedFiles.splice(idx, 1);
+    updatePreviews();
+  };
+
   input.addEventListener('change', e => {
-    selectedFiles = Array.from(e.target.files).slice(0, 5);
-    renderUpFileList();
+    selectedFiles = [...selectedFiles, ...Array.from(e.target.files)].slice(0, 5);
+    updatePreviews();
+    input.value = '';
   });
+
   dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragging'); });
   dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragging'));
   dropzone.addEventListener('drop', e => {
     e.preventDefault(); dropzone.classList.remove('dragging');
-    selectedFiles = Array.from(e.dataTransfer.files).slice(0, 5);
-    renderUpFileList();
+    selectedFiles = [...selectedFiles, ...Array.from(e.dataTransfer.files)].slice(0, 5);
+    updatePreviews();
   });
 
-  function renderUpFileList() {
-    const list = document.getElementById('upFileList');
-    if (!selectedFiles.length) { list.innerHTML = ''; return; }
-    list.innerHTML = selectedFiles.map((f, i) => {
-      const icon = f.type.startsWith('video') ? '🎬' : f.type.startsWith('image') ? '🖼' : f.type.startsWith('audio') ? '🎵' : '📄';
-      return `<div class="file-row"><span>${icon}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px">${escapeHtml(f.name)}</span><span style="font-size:10px;color:var(--ink-muted);font-family:var(--mono)">${(f.size/1024/1024).toFixed(1)}MB</span><button onclick="removeFile(${i})" style="background:transparent;border:none;cursor:pointer;color:var(--burgundy);font-size:15px">×</button></div>`;
+  // ── AUTOCOMPLETE ──
+  const searchInput = document.getElementById('searchInput');
+  const acDrop = document.getElementById('acDropdown');
+  let acCourses = [];
+  let acIdx = -1;
+
+  searchInput.addEventListener('input', function() {
+    homeDebounceSearch();
+    const q = this.value.trim();
+    if (!q) { acDrop.style.display = 'none'; return; }
+    const matches = acCourses.filter(c =>
+      c.title?.toLowerCase().includes(q.toLowerCase()) ||
+      c.instructor?.toLowerCase().includes(q.toLowerCase())
+    ).slice(0, 7);
+    if (!matches.length) { acDrop.style.display = 'none'; return; }
+    const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+    acDrop.innerHTML = matches.map(c => {
+      const icon = mediaIcon(Object.keys(c.mediaCounts || {video:1})[0]);
+      const title = escapeHtml(c.title).replace(re, '<span class="ac-highlight">$1</span>');
+      return `<div class="autocomplete-item" onclick="navigate('course',{id:'${c.id}'});acDrop.style.display='none'">
+        <span class="autocomplete-icon">${icon}</span>
+        <div style="flex:1"><div class="autocomplete-title">${title}</div><div class="autocomplete-meta">${escapeHtml(c.instructor)} · ${escapeHtml(c.category||'General')}</div></div>
+      </div>`;
     }).join('');
-  }
+    acDrop.style.display = 'block';
+  });
 
-  window.removeFile = (idx) => { selectedFiles.splice(idx, 1); renderUpFileList(); };
+  searchInput.addEventListener('keydown', e => {
+    const items = acDrop.querySelectorAll('.autocomplete-item');
+    if (e.key === 'ArrowDown') { e.preventDefault(); acIdx = Math.min(acIdx+1, items.length-1); items.forEach((el,i) => el.classList.toggle('ac-selected', i===acIdx)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); acIdx = Math.max(acIdx-1, -1); items.forEach((el,i) => el.classList.toggle('ac-selected', i===acIdx)); }
+    else if (e.key === 'Enter' && acIdx >= 0) items[acIdx]?.click();
+    else if (e.key === 'Escape') acDrop.style.display = 'none';
+  });
 
+  document.addEventListener('click', e => {
+    if (!searchInput.contains(e.target) && !acDrop.contains(e.target)) acDrop.style.display = 'none';
+  });
+
+  // ── CREATE COURSE ──
   window.homeCreateCourse = async () => {
     if (!requireAuth()) return;
     const title = document.getElementById('upTitle').value.trim();
     if (!title) return toast('Title is required', 'error');
-    
     const btn = document.getElementById('upCreateBtn');
+    const progressWrap = document.getElementById('upProgressWrap');
     btn.disabled = true;
     showLoading();
 
     try {
-      // Step 1: Create course metadata first (without media)
       const fd = new FormData();
       fd.append('title', title);
       fd.append('description', document.getElementById('upDescription').value);
       fd.append('instructor', document.getElementById('upInstructor').value);
       fd.append('category', document.getElementById('upCategory').value);
       fd.append('tags', document.getElementById('upTags').value);
-      
       btn.textContent = 'Creating course...';
       const course = await apiPost('/courses', fd, true);
-      
-      // Step 2: Upload each file directly to blob with progress
+
       if (selectedFiles.length > 0) {
-        for (var i = 0; i < selectedFiles.length; i++) {
-          var file = selectedFiles[i];
-          btn.textContent = 'Uploading ' + (i+1) + '/' + selectedFiles.length + ': ' + file.name.slice(0,20) + '...';
-          
-          // Show progress bar
-          var progressEl = document.getElementById('upProgress');
-          if (!progressEl) {
-            progressEl = document.createElement('div');
-            progressEl.id = 'upProgress';
-            progressEl.style.cssText = 'margin:8px 0;background:var(--rule);border-radius:3px;height:6px;overflow:hidden';
-            progressEl.innerHTML = '<div id="upProgressBar" style="height:100%;background:var(--amber);width:0%;transition:width 0.3s;border-radius:3px"></div>';
-            btn.parentNode.insertBefore(progressEl, btn);
-          }
-          
+        progressWrap.style.display = 'block';
+        for (let i = 0; i < selectedFiles.length; i++) {
+          const file = selectedFiles[i];
+          const label = document.getElementById('upProgressLabel');
+          const pct = document.getElementById('upProgressPct');
+          const bar = document.getElementById('upProgressBar');
+          if (label) label.textContent = `Uploading ${i+1}/${selectedFiles.length}: ${file.name.slice(0,25)}...`;
+          btn.textContent = `Uploading ${i+1}/${selectedFiles.length}...`;
           try {
-            // Get SAS token for direct upload
-            var sasData = await apiPost('/upload/sas', { fileName: file.name, mimeType: file.type });
-            
-            // Upload directly to Azure Blob Storage with progress
-            await new Promise(function(resolve, reject) {
-              var xhr = new XMLHttpRequest();
-              xhr.upload.onprogress = function(e) {
+            const sasData = await apiPost('/upload/sas', { fileName: file.name, mimeType: file.type });
+            await new Promise((resolve, reject) => {
+              const xhr = new XMLHttpRequest();
+              xhr.upload.onprogress = e => {
                 if (e.lengthComputable) {
-                  var pct = Math.round((e.loaded / e.total) * 100);
-                  var bar = document.getElementById('upProgressBar');
-                  if (bar) bar.style.width = pct + '%';
+                  const p = Math.round((e.loaded/e.total)*100);
+                  if (bar) bar.style.width = p + '%';
+                  if (pct) pct.textContent = p + '%';
                 }
               };
-              xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 300) resolve();
-                else reject(new Error('Upload failed: ' + xhr.status));
-              };
-              xhr.onerror = function() { reject(new Error('Network error during upload')); };
+              xhr.onload = () => xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error('Upload failed'));
+              xhr.onerror = () => reject(new Error('Network error'));
               xhr.open('PUT', sasData.uploadUrl);
               xhr.setRequestHeader('x-ms-blob-type', 'BlockBlob');
               xhr.setRequestHeader('Content-Type', file.type);
               xhr.send(file);
             });
-            
-            // Confirm upload with backend
-            await apiPost('/upload/confirm', {
-              courseId: course.id,
-              blobName: sasData.blobName,
-              container: sasData.container,
-              mediaType: sasData.mediaType,
-              originalName: sasData.originalName,
-              mimeType: sasData.mimeType,
-              directUrl: sasData.directUrl
-            });
-            
-          } catch(uploadErr) {
-            toast('Failed to upload ' + file.name + ': ' + uploadErr.message, 'error');
-          }
+            await apiPost('/upload/confirm', { courseId: course.id, blobName: sasData.blobName, container: sasData.container, mediaType: sasData.mediaType, originalName: sasData.originalName, mimeType: sasData.mimeType, directUrl: sasData.directUrl });
+          } catch(uploadErr) { toast('Failed to upload ' + file.name + ': ' + uploadErr.message, 'error'); }
         }
-        
-        // Remove progress bar
-        var progressEl = document.getElementById('upProgress');
-        if (progressEl) progressEl.remove();
+        progressWrap.style.display = 'none';
       }
-      
-      // Clear form
-      ['upTitle','upInstructor','upDescription','upTags'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.value = '';
-      });
-      input.value = ''; selectedFiles = []; renderUpFileList();
-      toast('Course published!', 'success');
+
+      ['upTitle','upInstructor','upDescription','upTags'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+      input.value = ''; selectedFiles = [];
+      document.getElementById('upPreviewArea').innerHTML = '';
+      toast('Course published! 🎉', 'success');
       homeLoadCourses();
-      
-    } catch(e) { 
-      toast(e.message, 'error'); 
-    } finally { 
-      btn.disabled = false; 
-      btn.textContent = 'Publish course'; 
-      hideLoading(); 
-    }
+    } catch(e) { toast(e.message, 'error'); }
+    finally { btn.disabled = false; btn.textContent = 'Publish course'; hideLoading(); }
   };
 
-  // Search debounce
+  // ── SEARCH + FILTER ──
   let searchDebounce;
   window.homeDebounceSearch = () => { clearTimeout(searchDebounce); searchDebounce = setTimeout(homeLoadCourses, 300); };
 
   let homeMediaFilter = '';
-  window.homeSetFilter = (type) => {
+  window.homeSetFilter = type => {
     homeMediaFilter = type;
     document.querySelectorAll('#mediaFilterGroup .pill').forEach(p => p.classList.toggle('active', p.dataset.type === type));
     homeLoadCourses();
@@ -257,6 +259,7 @@ registerPage('home', async function(container) {
 
   window.homeLoadCourses = async () => {
     showLoading();
+    showSkeletons('courseList', 3);
     try {
       const search = document.getElementById('searchInput')?.value || '';
       const category = document.getElementById('categoryFilter')?.value || '';
@@ -265,11 +268,12 @@ registerPage('home', async function(container) {
       if (category) params.set('category', category);
       if (homeMediaFilter) params.set('mediaType', homeMediaFilter);
       const courses = await apiGet(`/courses?${params}`);
+      acCourses = courses; // update autocomplete cache
       const count = courses.length;
       const libCount = document.getElementById('libCount');
-      if (libCount) libCount.textContent = `${count} ${count === 1 ? 'course' : 'courses'}`;
-      const statCourses = document.getElementById('statCourses');
-      if (statCourses) statCourses.textContent = count;
+      if (libCount) libCount.textContent = `${count} ${count===1?'course':'courses'}`;
+      const statEl = document.getElementById('statCourses');
+      if (statEl) statEl.textContent = count;
       const list = document.getElementById('courseList');
       if (!list) return;
       if (!courses.length) {
@@ -277,57 +281,22 @@ registerPage('home', async function(container) {
         return;
       }
       list.innerHTML = courses.map(c => renderCourseCard(c)).join('');
-      courses.forEach(c => homeLoadComments(c.id));
+      courses.forEach(c => loadComments(c.id));
       loadSidebarData(courses);
     } catch(e) { toast('Failed to load courses: ' + e.message, 'error'); }
     finally { hideLoading(); }
   };
 
-  window.homeLoadComments = async (courseId) => {
-    try {
-      const comments = await apiGet(`/courses/${courseId}/comments`);
-      const section = document.querySelector(`#course-${courseId} .c-comments`);
-      if (!section) return;
-      const list = section.querySelector('.comments-list');
-      if (!list) return;
-      if (!comments.length) { list.innerHTML = '<div style="font-size:13px;color:var(--ink-muted);font-style:italic;font-family:var(--serif)">No discussion yet.</div>'; return; }
-      list.innerHTML = comments.map(c => `
-        <div class="comment-row">
-          <span class="comment-author">${escapeHtml(c.authorName)}</span>
-          <span class="comment-date">${formatRelative(c.createdAt)}</span>
-          <div class="comment-text">${escapeHtml(c.text)}</div>
-        </div>`).join('');
-    } catch(e) {}
-  };
-
-  window.addComment = async (courseId, inputEl) => {
-    if (!requireAuth()) return;
-    const text = inputEl.value.trim();
-    if (!text) return;
-    try {
-      await apiPost(`/courses/${courseId}/comments`, { text });
-      inputEl.value = '';
-      homeLoadComments(courseId);
-      toast('Comment posted', 'success');
-    } catch(e) { toast(e.message, 'error'); }
-  };
-
-  // Load courses
   homeLoadCourses();
 });
 
-// Sidebar data loader
 async function loadSidebarData(courses) {
-  if (!courses) {
-    try { courses = await apiGet('/courses'); } catch(e) { return; }
-  }
-
-  // Featured — 3 most recent
-  const recent = [...courses].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3);
+  if (!courses) { try { courses = await apiGet('/courses'); } catch(e) { return; } }
+  const recent = [...courses].sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt)).slice(0,3);
   const featEl = document.getElementById('featuredList');
   if (featEl) {
     featEl.innerHTML = recent.length ? recent.map((c,i) => {
-      const types = Object.entries(c.mediaCounts || {}).map(([t,n]) => `${mediaIcon(t)} ${t}`).join(' · ') || 'No media';
+      const types = Object.entries(c.mediaCounts||{}).map(([t,n]) => `${mediaIcon(t)} ${t}`).join(' · ') || 'No media';
       return `<div class="feat-item" onclick="navigate('course',{id:'${c.id}'})">
         <div class="feat-rank">#${i+1} RECENT</div>
         <div class="feat-title">${escapeHtml(c.title)}</div>
@@ -335,55 +304,37 @@ async function loadSidebarData(courses) {
       </div>`;
     }).join('') : '<div class="feat-item"><div class="feat-meta">No courses yet</div></div>';
   }
-
-  // Leaderboard — count by instructor
   const counts = {};
-  courses.forEach(c => { const n = c.instructor || 'Unknown'; counts[n] = (counts[n]||0) + 1; });
-  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0,4);
+  courses.forEach(c => { const n = c.instructor||'Unknown'; counts[n]=(counts[n]||0)+1; });
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,4);
   const lbEl = document.getElementById('leaderboardList');
   if (lbEl && sorted.length) {
     const max = sorted[0][1];
     lbEl.innerHTML = sorted.map(([name,count],i) => {
       const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-      const pts = count*100 + (4-i)*20;
+      const pts = count*100+(4-i)*20;
       const pct = Math.round((count/max)*100);
-      return `<div class="lb-row">
-        <span class="lb-pos">${i+1}</span>
-        <div class="lb-av">${initials}</div>
-        <span class="lb-name">${escapeHtml(name)}</span>
-        <span class="lb-pts">${pts}</span>
-        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%"></div></div>
-      </div>`;
+      return `<div class="lb-row"><span class="lb-pos">${i+1}</span><div class="lb-av">${initials}</div><span class="lb-name">${escapeHtml(name)}</span><span class="lb-pts">${pts}</span><div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%"></div></div></div>`;
     }).join('');
   }
-
-  // Streak — days with activity
-  const dates = [...new Set(courses.map(c => new Date(c.createdAt).toDateString()))].sort((a,b) => new Date(b)-new Date(a));
+  const dates = [...new Set(courses.map(c=>new Date(c.createdAt).toDateString()))].sort((a,b)=>new Date(b)-new Date(a));
   let streak = 0;
   const today = new Date();
-  for (let i = 0; i < dates.length; i++) {
-    const diff = Math.floor((today - new Date(dates[i])) / 86400000);
-    if (diff <= i+1) streak++; else break;
-  }
-  if (streak === 0 && dates.length > 0) streak = 1;
-
+  for (let i=0;i<dates.length;i++) { const diff=Math.floor((today-new Date(dates[i]))/86400000); if(diff<=i+1)streak++; else break; }
+  if (streak===0&&dates.length>0) streak=1;
   const streakEl = document.getElementById('streakNumber');
   const streakMsg = document.getElementById('streakMsg');
   const streakDays = document.getElementById('streakDays');
   if (streakEl) streakEl.textContent = streak;
-  if (streakMsg) streakMsg.textContent = streak >= 7 ? `${streak} days in a row — amazing!` : streak >= 3 ? `${streak} days active — keep going!` : `${streak} day${streak!==1?'s':''} active`;
-
-  // Day dots for current week
+  if (streakMsg) streakMsg.textContent = streak>=7?`${streak} days in a row — amazing!`:streak>=3?`${streak} days active — keep going!`:`${streak} day${streak!==1?'s':''} active`;
   if (streakDays) {
     const days = ['M','T','W','T','F','S','S'];
-    const todayIdx = (new Date().getDay() + 6) % 7; // Mon=0
+    const todayIdx = (new Date().getDay()+6)%7;
     streakDays.innerHTML = days.map((d,i) => {
-      const cls = i < todayIdx ? 'done' : i === todayIdx ? 'today' : 'off';
+      const cls = i<todayIdx?'done':i===todayIdx?'today':'off';
       return `<div class="s-day ${cls}">${d}</div>`;
     }).join('');
   }
-
-  // My courses count
   const myCount = document.getElementById('sideMyCount');
   if (myCount) myCount.textContent = courses.length;
 }
