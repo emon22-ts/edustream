@@ -434,3 +434,8 @@ function getProgress(courseId) {
 
 function initAuth() { /* alias - auth handled in boot */ }
 function showLoading(id) { showSkeletons(id, 4); }
+
+function updateNotifBadge() {}
+function hideLoading(id) { var el = document.getElementById(id); if (el) el.innerHTML = ''; }
+var apiGet = fetch;
+function apiGet(url) { return fetch(url).then(function(r){ return r.json(); }); }
