@@ -448,3 +448,4 @@ function parseCourses(data) {
   if (data && Array.isArray(data.value)) return data.value;
   return [];
 }
+function hideAuthModal() { hideLoginModal(); }
