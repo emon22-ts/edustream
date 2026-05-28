@@ -269,6 +269,7 @@ registerPage('home', async function(container) {
       if (homeMediaFilter) params.set('mediaType', homeMediaFilter);
       const courses = await apiGet(`/courses?${params}`);
       acCourses = courses; // update autocomplete cache
+      courses = Array.isArray(courses) ? courses : [];
       const count = courses.length;
       const libCount = document.getElementById('libCount');
       if (libCount) libCount.textContent = `${count} ${count===1?'course':'courses'}`;
