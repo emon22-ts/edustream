@@ -456,3 +456,11 @@ function parseCourses(data) {
 function hideAuthModal() { hideLoginModal(); }
 function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function requireAuth(fn) { if (!currentAccount) { showLoginModal(); return; } fn(); }
+
+// Fix requireAuth - ensure fn is always called as function
+var _requireAuth = requireAuth;
+requireAuth = function(fn) {
+  if (typeof fn !== 'function') { if (!currentAccount) showLoginModal(); return; }
+  if (!currentAccount) { showLoginModal(); return; }
+  fn();
+};
