@@ -61,7 +61,7 @@ registerPage('dashboard', async function(container, params) {
   try {
     showLoading();
     [allCourses, enrollments] = await Promise.all([
-      apiGet('/courses'),
+      apiGet('/courses').then(d => Array.isArray(d) ? d : (d && Array.isArray(d.courses) ? d.courses : [])),
       currentAccount ? apiGet('/users/me/enrollments').catch(() => []) : Promise.resolve([])
     ]);
   } catch(e) {} finally { hideLoading(); }
