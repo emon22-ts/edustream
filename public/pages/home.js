@@ -186,7 +186,7 @@ registerPage('home', async function(container) {
 
   // ── CREATE COURSE ──
   window.homeCreateCourse = async () => {
-    if (!requireAuth()) return;
+    if (!currentAccount) { showLoginModal(); return; }
     const title = document.getElementById('upTitle').value.trim();
     if (!title) return toast('Title is required', 'error');
     const btn = document.getElementById('upCreateBtn');
