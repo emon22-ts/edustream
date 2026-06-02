@@ -464,3 +464,17 @@ requireAuth = function(fn) {
   if (!currentAccount) { showLoginModal(); return; }
   fn();
 };
+
+// Re-authenticate on every API call by sending user in header
+var _origFetch = window.fetch;
+window.fetch = function(url, opts) {
+  if (url && url.toString().includes('/api/') && currentAccount) {
+    opts = opts || {};
+    opts.headers = opts.headers || {};
+    if (!(opts.body instanceof FormData)) {
+      opts.headers['X-User-Id'] = currentAccount.id;
+      opts.headers['X-User-Role'] = currentAccount.role || 'user';
+    }
+  }
+  return _origFetch(url, opts);
+};
