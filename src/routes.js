@@ -132,7 +132,7 @@ router.post('/courses', writeLimiter, attachUser, upload.array('media', 5), asyn
     const { title, description, instructor, category, tags } = req.body;
     const user = req.session.user;
 
-    const modResult = await moderator.check(title + ' ' + description);
+    const modResult = await moderator.moderateText(title + ' ' + description);
     if (!modResult.approved) return res.status(400).json({ error: 'Content flagged: ' + modResult.reason });
 
     const mediaItems = [];
@@ -179,7 +179,7 @@ router.put('/courses/:id', writeLimiter,
     try {
       const { title, description, instructor, category, tags } = req.body;
       if (title) {
-        const modResult = await moderator.check(title + ' ' + (description || ''));
+        const modResult = await moderator.moderateText(title + ' ' + (description || ''));
         if (!modResult.approved) return res.status(400).json({ error: 'Content flagged: ' + modResult.reason });
       }
       const user = req.session.user;
@@ -233,7 +233,7 @@ router.post('/courses/:id/comments', writeLimiter, requireAuth, validateComment,
   try {
     const { text } = req.body;
     const user = req.session.user;
-    const modResult = await moderator.check(text);
+    const modResult = await moderator.moderateText(text);
     if (!modResult.approved) return res.status(400).json({ error: 'Comment blocked: ' + modResult.reason });
 
     const comment = await db.Comments.create(req.params.id, {
