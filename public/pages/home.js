@@ -1,5 +1,20 @@
 // pages/home.js - Home page with skeletons, autocomplete, image previews
 
+async function apiPost(path, body, isFormData) {
+  const opts = { method: 'POST' };
+  if (isFormData) { opts.body = body; }
+  else { opts.headers = {'Content-Type':'application/json'}; opts.body = JSON.stringify(body); }
+  const r = await fetch('/api' + path, opts);
+  return r.json();
+}
+async function apiPut(path, body) {
+  const r = await fetch('/api' + path, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  return r.json();
+}
+async function apiDelete(path) {
+  const r = await fetch('/api' + path, { method:'DELETE' });
+  return r.json();
+}
 registerPage('home', async function(container) {
   container.innerHTML = `
     <div class="hero-band">
