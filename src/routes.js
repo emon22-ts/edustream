@@ -232,7 +232,7 @@ router.get('/courses/:id/comments', readLimiter, async (req, res, next) => {
 router.post('/courses/:id/comments', writeLimiter, requireAuth, validateComment, async (req, res, next) => {
   try {
     const { text } = req.body;
-    const user = req.session.user;
+    const user = req.session.user || req.user || { id: 'anonymous', name: 'Anonymous', role: 'user' };
     const modResult = await moderator.moderateText(text);
     if (!modResult.approved) return res.status(400).json({ error: 'Comment blocked: ' + modResult.reason });
 
