@@ -149,7 +149,7 @@ router.post('/courses', writeLimiter, attachUser, upload.array('media', 5), asyn
       category: category || 'General', tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       media: mediaItems, mediaCounts, mediaTypes: Object.keys(mediaCounts),
       createdBy: user.id, createdByName: user.name,
-      isDeleted: false, deletedAt: null, deletedBy: null,
+      isDeleted: false,
       createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
     });
 
@@ -361,7 +361,7 @@ router.post('/admin/users/:id/role', requireRole(ROLES.ADMIN), async (req, res, 
 router.post('/admin/courses/:id/restore', requireRole(ROLES.ADMIN, ROLES.MODERATOR), async (req, res, next) => {
   try {
     const admin = req.session.user;
-    await db.Courses.update(req.params.id, { isDeleted: false, deletedAt: null, deletedBy: null, restoredAt: new Date().toISOString(), restoredBy: admin.id });
+    await db.Courses.update(req.params.id, { isDeleted: false, restoredAt: new Date().toISOString(), restoredBy: admin.id });
     await audit.log('restore', admin.id, admin.name, 'course', req.params.id, { ip: req.ip });
     res.json({ success: true, message: 'Course restored' });
   } catch(err) { next(err); }
