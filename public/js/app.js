@@ -32,6 +32,11 @@ function navigate(page, params) {
 
 // ── AUTH UI ──
 function updateAuthUI() {
+  // Show/hide admin nav link
+  var adminLink = document.getElementById('adminNavLink');
+  if (adminLink) {
+    adminLink.style.display = (currentAccount && currentAccount.role === 'admin') ? 'inline-block' : 'none';
+  }
   var signInBtn = document.getElementById('signInBtn');
   var signOutBtn = document.getElementById('signOutBtn');
   var userPill = document.getElementById('userPill');
