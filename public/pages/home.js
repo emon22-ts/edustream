@@ -282,7 +282,7 @@ registerPage('home', async function(container) {
       if (search) params.set('search', search);
       if (category) params.set('category', category);
       if (homeMediaFilter) params.set('mediaType', homeMediaFilter);
-      const courses = await apiGet(`/courses?${params}`);
+      let courses = await apiGet(`/courses?${params}`);
       acCourses = courses; // update autocomplete cache
       courses = Array.isArray(courses) ? courses : [];
       const count = courses.length;

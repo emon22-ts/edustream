@@ -127,7 +127,7 @@ router.get('/courses', readLimiter, attachUser, async (req, res, next) => {
   } catch(err) { next(err); }
 });
 
-router.post('/courses', writeLimiter, requireAuth, validateCourse, upload.array('media', 5), async (req, res, next) => {
+router.post('/courses', writeLimiter, attachUser, validateCourse, upload.array('media', 5), async (req, res, next) => {
   try {
     const { title, description, instructor, category, tags } = req.body;
     const user = req.session.user;
