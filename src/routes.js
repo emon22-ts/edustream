@@ -69,7 +69,7 @@ router.post('/auth/register', authLimiter, validateRegister, async (req, res, ne
   } catch(err) { next(err); }
 });
 
-router.post('/auth/login', authLimiter, async (req, res, next) => {
+router.post('/auth/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
