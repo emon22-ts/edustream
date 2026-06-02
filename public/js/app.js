@@ -482,3 +482,21 @@ requireAuth = function(fn) {
     return _origFetch(url, opts);
   };
 })();
+
+// Send credentials and user info on every API call
+(function() {
+  var _origFetch = window.fetch.bind(window);
+  window.fetch = function(url, opts) {
+    opts = opts || {};
+    opts.credentials = 'include';
+    if (url && String(url).includes('/api/') && currentAccount) {
+      opts.headers = opts.headers || {};
+      if (!(opts.body instanceof FormData)) {
+        opts.headers['X-User-Id'] = currentAccount.id || '';
+        opts.headers['X-User-Role'] = currentAccount.role || 'user';
+        opts.headers['X-User-Name'] = currentAccount.name || '';
+      }
+    }
+    return _origFetch(url, opts);
+  };
+})();
