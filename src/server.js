@@ -13,7 +13,7 @@ const { config, loadFromKeyVault, validate } = require('./config');
 const telemetry = require('./services/telemetry');
 const tablestorage = require('./services/tablestorage');
 const storage = require('./services/storage');
-const { attachUser } = require('./middleware/auth');
+const { attachUser } = require('./middleware/rbac');
 const routes = require('./routes');
 
 async function main() {
