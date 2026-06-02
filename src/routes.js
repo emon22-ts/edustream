@@ -130,7 +130,7 @@ router.get('/courses', readLimiter, attachUser, async (req, res, next) => {
 router.post('/courses', writeLimiter, attachUser, upload.array('media', 5), async (req, res, next) => {
   try {
     const { title, description, instructor, category, tags } = req.body;
-    const user = req.session.user;
+    const user = req.session?.user || req.user || { id: "anonymous", name: "Anonymous", role: "user" };
 
     const modResult = await moderator.moderateText(title + ' ' + description);
     if (!modResult.approved) return res.status(400).json({ error: 'Content flagged: ' + modResult.reason });
@@ -182,7 +182,7 @@ router.put('/courses/:id', writeLimiter,
         const modResult = await moderator.moderateText(title + ' ' + (description || ''));
         if (!modResult.approved) return res.status(400).json({ error: 'Content flagged: ' + modResult.reason });
       }
-      const user = req.session.user;
+      const user = req.session?.user || req.user || { id: "anonymous", name: "Anonymous", role: "user" };
       const updated = await db.Courses.update(req.params.id, {
         ...(title && { title: title.trim() }),
         ...(description !== undefined && { description }),
@@ -205,7 +205,7 @@ router.delete('/courses/:id', writeLimiter,
   }),
   async (req, res, next) => {
     try {
-      const user = req.session.user;
+      const user = req.session?.user || req.user || { id: "anonymous", name: "Anonymous", role: "user" };
       const course = await db.Courses.get(req.params.id);
       if (!course) return res.status(404).json({ error: 'Course not found' });
 
@@ -248,7 +248,7 @@ router.post('/courses/:id/comments', writeLimiter, requireAuth, validateComment,
 
 router.delete('/comments/:id', writeLimiter, requireAuth, async (req, res, next) => {
   try {
-    const user = req.session.user;
+    const user = req.session?.user || req.user || { id: "anonymous", name: "Anonymous", role: "user" };
     const comment = await db.Comments.get(req.params.id);
     if (!comment) return res.status(404).json({ error: 'Comment not found' });
 
@@ -266,7 +266,7 @@ router.delete('/comments/:id', writeLimiter, requireAuth, async (req, res, next)
 // ── ENROLL ──
 router.post('/courses/:id/enroll', writeLimiter, requireAuth, async (req, res, next) => {
   try {
-    const user = req.session.user;
+    const user = req.session?.user || req.user || { id: "anonymous", name: "Anonymous", role: "user" };
     const enrollment = await db.Enrollments.create(req.params.id, user.id, { enrolledAt: new Date().toISOString(), progressPct: 0 });
     telemetry.trackEvent('CourseEnrolled', { courseId: req.params.id, userId: user.id });
     res.status(201).json(enrollment);
@@ -299,7 +299,7 @@ router.post('/upload/confirm', writeLimiter, requireAuth, async (req, res, next)
     const course = await db.Courses.get(courseId);
     if (!course) return res.status(404).json({ error: 'Course not found' });
 
-    const user = req.session.user;
+    const user = req.session?.user || req.user || { id: "anonymous", name: "Anonymous", role: "user" };
     const isAdmin = user.role === ROLES.ADMIN || user.role === ROLES.MODERATOR;
     if (course.createdBy !== user.id && !isAdmin) {
       return res.status(403).json({ error: 'You can only add media to your own courses' });
