@@ -282,7 +282,7 @@ router.get('/users/me/enrollments', requireAuth, async (req, res, next) => {
 });
 
 // ── UPLOAD (SAS) ──
-router.post('/upload/sas', uploadLimiter, requireAuth, async (req, res, next) => {
+router.post('/upload/sas', uploadLimiter, attachUser, async (req, res, next) => {
   try {
     const { fileName, mimeType } = req.body;
     if (!fileName || !mimeType) return res.status(400).json({ error: 'fileName and mimeType required' });
