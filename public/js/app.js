@@ -506,3 +506,6 @@ function loadComments(courseId) { /* loaded inline in course detail */ }
 function mediaIcon(type) {
   return type === 'video' ? '🎬' : type === 'image' ? '🖼' : type === 'audio' ? '🎵' : '📄';
 }
+
+function formatDate(d) { return d ? new Date(d).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : ''; }
+function formatRelative(d) { if (!d) return ''; var diff = Date.now()-new Date(d); var m=Math.floor(diff/60000); if(m<1) return 'just now'; if(m<60) return m+'m ago'; var h=Math.floor(m/60); if(h<24) return h+'h ago'; return Math.floor(h/24)+'d ago'; }
