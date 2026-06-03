@@ -272,6 +272,31 @@ registerPage('home', async function(container) {
     homeLoadCourses();
   };
 
+
+function renderCourseCard(c) {
+  const progress = getProgress ? getProgress(c.id) : 0;
+  const stars = renderStars ? renderStars(c.id) : '';
+  const mediaIcons = (c.mediaTypes||[]).map(t=>t==='video'?'🎬':t==='image'?'🖼':'🎵').join(' ');
+  return `<div class="card" style="margin-bottom:16px;padding:16px;border:1px solid var(--rule);border-radius:8px;background:var(--paper)">
+    <div style="font-family:var(--serif);font-size:18px;font-weight:500;margin-bottom:4px">${escapeHtml(c.title||'Untitled')}</div>
+    <div style="font-size:12px;color:var(--ink-muted);margin-bottom:8px">by ${escapeHtml(c.instructor||'')} · ${escapeHtml(c.category||'')} ${mediaIcons}</div>
+    <div style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">${escapeHtml((c.description||'').slice(0,120))}${(c.description||'').length>120?'…':''}</div>
+    ${stars}
+    ${progress>0?`<div style="height:4px;background:var(--rule);border-radius:2px;margin-top:8px"><div style="height:4px;background:var(--amber);width:${progress}%;border-radius:2px"></div></div>`:''}
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button onclick="navigate('course',{id:'${c.id}'})" style="flex:1;padding:7px;background:var(--amber);color:white;border:none;border-radius:4px;cursor:pointer;font-size:13px">View</button>
+      <button onclick="homeDeleteCourse('${c.id}')" style="padding:7px 12px;background:transparent;border:1px solid var(--rule);border-radius:4px;cursor:pointer;font-size:13px">Delete</button>
+    </div>
+  </div>`;
+}
+
+window.homeDeleteCourse = async function(id) {
+  if (!confirm('Delete this course?')) return;
+  await fetch('/api/courses/'+id, {method:'DELETE',credentials:'include'});
+  homeLoadCourses();
+  toast('Course deleted', 'success');
+};
+
   window.homeLoadCourses = async () => {
     showLoading();
     showSkeletons('courseList', 3);
