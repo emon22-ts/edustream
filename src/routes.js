@@ -292,7 +292,7 @@ router.post('/upload/sas', uploadLimiter, attachUser, async (req, res, next) => 
   } catch(err) { next(err); }
 });
 
-router.post('/upload/confirm', writeLimiter, requireAuth, async (req, res, next) => {
+router.post('/upload/confirm', writeLimiter, attachUser, async (req, res, next) => {
   try {
     const { courseId, blobName, container, mediaType, originalName, mimeType, directUrl } = req.body;
     if (!courseId || !blobName) return res.status(400).json({ error: 'courseId and blobName required' });
