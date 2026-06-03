@@ -225,7 +225,7 @@ router.delete('/courses/:id', writeLimiter,
 // ── COMMENTS ──
 router.get('/courses/:id/comments', readLimiter, async (req, res, next) => {
   try {
-    const comments = await db.Comments.list(req.params.id);
+    const comments = await db.Comments.listForCourse(req.params.id);
     res.json(comments.filter(c => !c.isDeleted));
   } catch(err) { next(err); }
 });
