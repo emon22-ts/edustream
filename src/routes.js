@@ -144,7 +144,8 @@ router.post('/courses', writeLimiter, attachUser, upload.array('media', 5), asyn
     }
 
     const mediaCounts = mediaItems.reduce((acc, m) => { acc[m.mediaType] = (acc[m.mediaType] || 0) + 1; return acc; }, {});
-    const course = await db.Courses.create({
+    const courseId = require('crypto').randomUUID();
+    const course = await db.Courses.create({ id: courseId,
       title: title.trim(), description: description || '', instructor: instructor || user.name,
       category: category || 'General', tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       media: mediaItems, mediaCounts, mediaTypes: Object.keys(mediaCounts),
