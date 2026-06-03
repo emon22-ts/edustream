@@ -199,7 +199,7 @@ router.put('/courses/:id', writeLimiter,
 );
 
 // Soft delete — marks as deleted, admin can restore
-router.delete('/courses/:id', writeLimiter,
+router.delete('/courses/:id', writeLimiter, attachUser,
   requireOwnership(async (req) => {
     const course = await db.Courses.get(req.params.id);
     return course?.createdBy;
