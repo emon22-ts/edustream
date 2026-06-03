@@ -268,7 +268,7 @@ router.delete('/comments/:id', writeLimiter, requireAuth, async (req, res, next)
 router.post('/courses/:id/enroll', writeLimiter, attachUser, async (req, res, next) => {
   try {
     const user = req.session?.user || req.user || { id: "anonymous", name: "Anonymous", role: "user" };
-    const enrollment = await db.Enrollments.create(req.params.id, user.id, { enrolledAt: new Date().toISOString(), progressPct: 0 });
+    const enrollment = await db.Enrollments.enroll({ id: require('crypto').randomUUID(), courseId: req.params.id, userId: user.id, enrolledAt: new Date().toISOString(), progressPct: 0 });
     telemetry.trackEvent('CourseEnrolled', { courseId: req.params.id, userId: user.id });
     res.status(201).json(enrollment);
   } catch(err) { next(err); }
