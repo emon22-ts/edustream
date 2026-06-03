@@ -265,7 +265,7 @@ router.delete('/comments/:id', writeLimiter, requireAuth, async (req, res, next)
 });
 
 // ── ENROLL ──
-router.post('/courses/:id/enroll', writeLimiter, requireAuth, async (req, res, next) => {
+router.post('/courses/:id/enroll', writeLimiter, attachUser, async (req, res, next) => {
   try {
     const user = req.session?.user || req.user || { id: "anonymous", name: "Anonymous", role: "user" };
     const enrollment = await db.Enrollments.create(req.params.id, user.id, { enrolledAt: new Date().toISOString(), progressPct: 0 });
