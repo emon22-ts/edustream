@@ -509,3 +509,28 @@ function mediaIcon(type) {
 
 function formatDate(d) { return d ? new Date(d).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}) : ''; }
 function formatRelative(d) { if (!d) return ''; var diff = Date.now()-new Date(d); var m=Math.floor(diff/60000); if(m<1) return 'just now'; if(m<60) return m+'m ago'; var h=Math.floor(m/60); if(h<24) return h+'h ago'; return Math.floor(h/24)+'d ago'; }
+
+function editCourse(id) {
+  var title = prompt('New title:');
+  if (!title) return;
+  fetch('/api/courses/' + id, {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json','X-User-Id': currentAccount ? currentAccount.id : 'anonymous','X-User-Role': currentAccount ? currentAccount.role : 'user'},
+    credentials: 'include',
+    body: JSON.stringify({title: title})
+  }).then(r=>r.json()).then(d=>{
+    if (d.error) toast(d.error, 'error');
+    else { toast('Course updated', 'success'); navigate('home'); }
+  });
+}
+
+function enrollCourse(id) {
+  fetch('/api/courses/' + id + '/enroll', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {'X-User-Id': currentAccount ? currentAccount.id : 'anonymous','X-User-Role': currentAccount ? currentAccount.role : 'user'}
+  }).then(r=>r.json()).then(d=>{
+    if (d.error) toast(d.error, 'error');
+    else toast('Enrolled successfully!', 'success');
+  });
+}
