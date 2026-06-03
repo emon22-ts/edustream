@@ -500,3 +500,5 @@ requireAuth = function(fn) {
     return _origFetch(url, opts);
   };
 })();
+
+function loadComments(courseId) { /* loaded inline in course detail */ }

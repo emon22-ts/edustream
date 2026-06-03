@@ -298,7 +298,7 @@ function renderCourseCard(c) {
 
 window.homeDeleteCourse = async function(id) {
   if (!confirm('Delete this course?')) return;
-  await fetch('/api/courses/'+id, {method:'DELETE',credentials:'include'});
+  await fetch('/api/courses/'+id, {method:'DELETE',credentials:'include',headers:{'X-User-Id': currentAccount ? currentAccount.id : 'anonymous','X-User-Role': currentAccount ? currentAccount.role : 'user'}});
   homeLoadCourses();
   toast('Course deleted', 'success');
 };
