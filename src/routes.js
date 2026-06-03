@@ -119,7 +119,7 @@ router.get('/courses', readLimiter, attachUser, async (req, res, next) => {
     let courses = await db.Courses.list();
     // Filter out soft-deleted unless admin
     const isAdmin = req.user?.role === ROLES.ADMIN || req.user?.role === ROLES.MODERATOR;
-    if (!isAdmin) courses = courses.filter(c => !c.isDeleted);
+    courses = courses.filter(c => !c.isDeleted);
     if (search) { const s = search.toLowerCase(); courses = courses.filter(c => c.title?.toLowerCase().includes(s) || c.description?.toLowerCase().includes(s)); }
     if (category) courses = courses.filter(c => c.category === category);
     if (mediaType) courses = courses.filter(c => (c.mediaTypes || []).includes(mediaType));
