@@ -1,3 +1,16 @@
+async function apiGet(path) {
+  const r = await fetch('/api' + path, {credentials:'include'});
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+async function apiPost(path, body) {
+  const r = await fetch('/api' + path, {method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body)});
+  return r.json();
+}
+async function apiDelete(path) {
+  const r = await fetch('/api' + path, {method:'DELETE',credentials:'include'});
+  return r.json();
+}
 
 function renderMediaViewer(course) {
   const media = course.media || [];
