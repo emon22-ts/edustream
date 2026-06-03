@@ -502,3 +502,7 @@ requireAuth = function(fn) {
 })();
 
 function loadComments(courseId) { /* loaded inline in course detail */ }
+
+function mediaIcon(type) {
+  return type === 'video' ? '🎬' : type === 'image' ? '🖼' : type === 'audio' ? '🎵' : '📄';
+}
