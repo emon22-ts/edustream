@@ -230,7 +230,7 @@ router.get('/courses/:id/comments', readLimiter, async (req, res, next) => {
   } catch(err) { next(err); }
 });
 
-router.post('/courses/:id/comments', writeLimiter, requireAuth, validateComment, async (req, res, next) => {
+router.post('/courses/:id/comments', writeLimiter, attachUser, async (req, res, next) => {
   try {
     const { text } = req.body;
     const user = req.session.user || req.user || { id: 'anonymous', name: 'Anonymous', role: 'user' };
@@ -239,7 +239,7 @@ router.post('/courses/:id/comments', writeLimiter, requireAuth, validateComment,
 
     const comment = await db.Comments.create(req.params.id, {
       text, authorId: user.id, authorName: user.name,
-      isDeleted: false, createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString()
     });
     telemetry.trackEvent('CommentPosted', { courseId: req.params.id, userId: user.id });
     await audit.log('create', user.id, user.name, 'comment', comment.id, { courseId: req.params.id, ip: req.ip });
