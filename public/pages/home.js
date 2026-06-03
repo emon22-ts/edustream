@@ -1,3 +1,9 @@
+// pages/home.js
+async function apiGet(path) {
+  const r = await fetch('/api' + path, {credentials:'include'});
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
 // pages/home.js - Home page with skeletons, autocomplete, image previews
 
 async function apiPost(path, body, isFormData) {
