@@ -1,3 +1,43 @@
+
+function renderMediaViewer(course) {
+  const media = course.media || [];
+  if (!media.length) return '<div style="padding:20px;text-align:center;color:var(--ink-muted)">No media files</div>';
+  
+  const videos = media.filter(m => m.mediaType === 'video');
+  const images = media.filter(m => m.mediaType === 'image');
+  const audios = media.filter(m => m.mediaType === 'audio');
+  
+  let html = '<div style="padding:16px">';
+  
+  if (videos.length) {
+    html += '<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px">🎬 Videos</div>';
+    videos.forEach(v => {
+      html += '<video controls style="width:100%;border-radius:6px;margin-bottom:8px;background:#000" src="' + v.directUrl + '"></video>';
+    });
+    html += '</div>';
+  }
+  
+  if (images.length) {
+    html += '<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px">🖼 Images</div>';
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">';
+    images.forEach(img => {
+      html += '<img src="' + img.directUrl + '" style="width:100%;border-radius:6px;object-fit:cover;aspect-ratio:16/9;cursor:pointer" onclick="window.open(\'' + img.directUrl + '\')">';
+    });
+    html += '</div></div>';
+  }
+  
+  if (audios.length) {
+    html += '<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px">🎵 Audio</div>';
+    audios.forEach(a => {
+      html += '<div style="margin-bottom:8px"><div style="font-size:13px;color:var(--ink-soft);margin-bottom:4px">' + (a.originalName || 'Audio file') + '</div>';
+      html += '<audio controls style="width:100%" src="' + a.directUrl + '"></audio></div>';
+    });
+    html += '</div>';
+  }
+  
+  html += '</div>';
+  return html;
+}
 // pages/course.js
 // Course detail page — full view, all media, comments, enroll
 
